@@ -19,14 +19,33 @@ const columns = [
   },
   { headerName: "Email", field: "email", width: 300 },
   { headerName: "Followers", field: "followersCount", align: "center" },
-  // { headerName: "Post", field: "post_pic", width: "10%" },
+  {
+    headerName: "Post",
+    field: "post_pic",
+    width: 300,
+    renderCell: (params) => (
+      <img
+        src={`https://storage.googleapis.com/instagram-global-data-images/media/${params.row.id}.jpg`}
+        style={{ width: 200 }}
+      />
+    ),
+  },
   {
     headerName: "Post link",
     field: "url",
     width: 200,
     renderCell: (params) => (
-      <a href={params.value}>
-        <Typography variant="h6" sx={{fontWeight:400}}>Post page</Typography>{" "}
+      <a href={params.value} target="_blanck">
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 400,
+            color: "#7b809a",
+            textDecoration: "underline",
+          }}
+        >
+          Post page
+        </Typography>{" "}
       </a>
     ),
   },
@@ -46,6 +65,7 @@ const columns = [
     field: "engagement_rate",
     width: 200,
     align: "center",
+    headerAlign: "center",
   },
   {
     headerName: "Mentions",
@@ -69,7 +89,6 @@ const columns = [
     headerName: "Location",
     field: "locationName",
     width: 300,
- 
   },
   {
     headerName: "Published",

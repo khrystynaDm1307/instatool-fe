@@ -6,6 +6,7 @@ const initialValues = {
   engagement: "any",
   likes: "any",
   postType: "any",
+  username:""
 };
 
 export default initialValues;

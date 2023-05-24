@@ -3,6 +3,12 @@ import { ENGAGEMENT_VALUES, LIKES_VALUES, PERIOD_VALUES, POST_TYPE_VALUES } from
 const form = {
   formId: "posts-form",
   formField: {
+    username: {
+      type: "text",
+      label: "Username",
+      name: "username",
+      placeholder: "Typer here ...",
+    },
     period: {
       type: "select",
       label: "Period",

@@ -50,21 +50,28 @@ import getRows from "./helpers/table/rowsTransorm";
 import columns from "./helpers/table/columns";
 
 import {
-
   gridPageCountSelector,
   GridPagination,
   useGridApiContext,
   useGridSelector,
-} from '@mui/x-data-grid';
-import MuiPagination from '@mui/material/Pagination';
+} from "@mui/x-data-grid";
+import MuiPagination from "@mui/material/Pagination";
 
 function Posts() {
-  const { likes, keywords, mentions, period, hashtags, engagement, postType } =
-    form.formField;
+  const {
+    likes,
+    keywords,
+    mentions,
+    period,
+    hashtags,
+    engagement,
+    postType,
+    username,
+  } = form.formField;
 
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
-    pageSize: 10,
+    pageSize: 50,
   });
 
   const [err, setErr] = useState();
@@ -90,7 +97,8 @@ function Posts() {
   }
 
   function CustomPagination(props) {
-    return <GridPagination ActionsComponent={Pagination} {...props}/>;
+ 
+    return <GridPagination ActionsComponent={Pagination} {...props} />;
   }
 
   const handleSubmit = (values, handlers) => {
@@ -129,6 +137,11 @@ function Posts() {
             <Formik initialValues={initialValues} onSubmit={handleSubmit}>
               {(formData) => (
                 <Form id={form.formId} autoComplete="off">
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <FormField {...{ ...username, formData }} />
+                    </Grid>
+                  </Grid>
                   <Grid container spacing={3} mt={1}>
                     <Grid item xs={12} sm={6}>
                       <FormField {...{ ...likes, formData }} />
@@ -256,9 +269,9 @@ function Posts() {
                         borderWidth: 0,
                       }}
                       pagination
-                      slots={{
-                        pagination: CustomPagination,
-                      }}
+                      // slots={{
+                      //   pagination: CustomPagination,
+                      // }}
                     />
                   </MDBox>
                 )}
