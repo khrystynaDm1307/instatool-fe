@@ -23,23 +23,27 @@ import MDTypography from "components/MDTypography";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import Avatar from "@mui/material/Avatar";
 
-function InfluencerCell({ fullName, username, verified }) {
+function InfluencerCell({ fullName, username, verified, url }) {
   return (
-    <MDBox display="flex" alignItems="center" pr={2}>
-      <MDBox mr={2}>
-        <Avatar
-          src={`https://storage.googleapis.com/instagram-global-data-images/owners/${username}.jpg`}
-          alt={fullName}
-        />
-      </MDBox>
-      <MDBox display="flex" flexDirection="column">
-        <MDBox display="flex" alignItems="center">
-          <MDTypography sx={{ fontSize: "1.2rem" }}>{fullName}</MDTypography>
-          {verified && <VerifiedIcon color="info" fontSize="small" sx={{ ml: 1 }} />}
+    <a href={url} target="_blank">
+      <MDBox display="flex" alignItems="center" px={2}>
+        <MDBox mr={2}>
+          <Avatar
+            src={`https://storage.googleapis.com/instagram-global-data-images/owners/${username}.jpg`}
+            alt={fullName}
+          />
         </MDBox>
-        <MDTypography variant="button">@{username}</MDTypography>
+        <MDBox display="flex" flexDirection="column">
+          <MDBox display="flex" alignItems="center">
+            <MDTypography sx={{ fontSize: "1.2rem" }}>{fullName}</MDTypography>
+            {verified && (
+              <VerifiedIcon color="info" fontSize="small" sx={{ ml: 1 }} />
+            )}
+          </MDBox>
+          <MDTypography variant="button">@{username}</MDTypography>
+        </MDBox>
       </MDBox>
-    </MDBox>
+    </a>
   );
 }
 

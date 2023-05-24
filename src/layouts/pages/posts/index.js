@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 
 // React tools
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -22,6 +22,7 @@ import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
+import { DataGrid } from "@mui/x-data-grid";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
@@ -33,7 +34,6 @@ import MDAlert from "components/MDAlert";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import DataTable from "examples/Tables/DataTable";
 
 // react-query
 import { useMutation } from "react-query";
@@ -43,33 +43,82 @@ import { Formik, Form } from "formik";
 import form from "./schemas/form";
 import FormField from "./components/FormField";
 import initialValues from "./schemas/initialValues";
-import columns from "./helpers/table/columns";
-import getRows from "./helpers/table/rowsTransorm";
 
 // api
 import posts from "api/posts";
+import getRows from "./helpers/table/rowsTransorm";
+import columns from "./helpers/table/columns";
+
+import {
+
+  gridPageCountSelector,
+  GridPagination,
+  useGridApiContext,
+  useGridSelector,
+} from '@mui/x-data-grid';
+import MuiPagination from '@mui/material/Pagination';
 
 function Posts() {
-  const { likes, keywords, mentions, period, hashtags, engagement, postType } = form.formField;
+  const { likes, keywords, mentions, period, hashtags, engagement, postType } =
+    form.formField;
+
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
 
   const [err, setErr] = useState();
   const { isLoading, data, mutate } = useMutation("posts", posts.getPosts);
-  console.log(data);
+  const [rowCountState, setRowCountState] = useState(data?.data?.count || 0);
+  const [formValues, setFormValues] = useState({});
+
+  function Pagination({ page, onPageChange, className }) {
+    const apiRef = useGridApiContext();
+    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+
+    return (
+      <MuiPagination
+        color="info"
+        className={className}
+        count={pageCount}
+        page={page + 1}
+        onChange={(event, newPage) => {
+          onPageChange(event, newPage - 1);
+        }}
+      />
+    );
+  }
+
+  function CustomPagination(props) {
+    return <GridPagination ActionsComponent={Pagination} {...props}/>;
+  }
+
   const handleSubmit = (values, handlers) => {
-    const params = {};
+    const params = { ...paginationModel };
 
     for (const key in values) {
       params[key] =
-        values[key] === "any" || values[key] === "" || values[key] === [] ? null : values[key];
+        values[key] === "any" || values[key] === "" || values[key] === []
+          ? null
+          : values[key];
     }
-
-    mutate(params, { onError: (e) => setErr(true) });
-    handlers.setSubmitting(false);
+    setFormValues(params);
+    handleMutate(params);
+    handlers?.setSubmitting(false);
   };
 
   const resetFilters = (formData) => {
     formData.resetForm();
   };
+
+  const handleMutate = (params) =>
+    mutate(params, { onError: (e) => setErr(true) });
+
+  useEffect(() => {
+    setRowCountState((prevRowCountState) =>
+      data?.data?.count !== undefined ? data?.data?.count : prevRowCountState
+    );
+  }, [data?.data?.count, setRowCountState, paginationModel]);
 
   return (
     <DashboardLayout>
@@ -80,8 +129,6 @@ function Posts() {
             <Formik initialValues={initialValues} onSubmit={handleSubmit}>
               {(formData) => (
                 <Form id={form.formId} autoComplete="off">
-                  <Grid container spacing={3}></Grid>
-
                   <Grid container spacing={3} mt={1}>
                     <Grid item xs={12} sm={6}>
                       <FormField {...{ ...likes, formData }} />
@@ -113,7 +160,11 @@ function Posts() {
                     </Grid>
                   </Grid>
 
-                  <MDBox mt={4} sx={{ width: "100%", justifyContent: "flex-end" }} display="flex">
+                  <MDBox
+                    mt={4}
+                    sx={{ width: "100%", justifyContent: "flex-end" }}
+                    display="flex"
+                  >
                     <MDButton
                       variant="outlined"
                       color="info"
@@ -122,7 +173,12 @@ function Posts() {
                     >
                       Clear all filters
                     </MDButton>
-                    <MDButton variant="contained" color="info" disabled={isLoading} type="submit">
+                    <MDButton
+                      variant="contained"
+                      color="info"
+                      disabled={isLoading}
+                      type="submit"
+                    >
                       Find posts
                     </MDButton>
                   </MDBox>
@@ -152,28 +208,57 @@ function Posts() {
             <Grid item xs={12}>
               <Card>
                 <MDBox pt={3} px={3}>
-                  <MDTypography variant="h6" fontWeight="medium">
+                  <MDTypography variant="h5" fontWeight="medium">
                     Posts
                   </MDTypography>
                 </MDBox>
                 {isLoading && (
                   <Box
-                    sx={{ width: "100%", p: 2, pb: 3, display: "flex", justifyContent: "center" }}
+                    sx={{
+                      width: "100%",
+                      p: 2,
+                      pb: 3,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
                   >
                     <CircularProgress />
                   </Box>
                 )}
                 {data?.data && (
-                  <MDBox py={1}>
-                    <DataTable
-                      table={{
-                        columns,
-                        rows: data.data?.map((post) => getRows(post)),
+                  <MDBox p={1} px={2}>
+                    <DataGrid
+                      rows={data?.data?.data?.map((post) => getRows(post))}
+                      columns={columns}
+                      paginationModel={paginationModel}
+                      pageSizeOptions={[10, 50, 100]}
+                      paginationMode="server"
+                      disableRowSelectionOnClick
+                      onPaginationModelChange={(values) => {
+                        setPaginationModel(values);
+                        handleMutate({ ...formValues, ...values });
                       }}
-                      entriesPerPage={true}
-                      showTotalEntries={true}
-                      isSorted={true}
-                      noEndBorder
+                      loading={isLoading}
+                      rowCount={rowCountState}
+                      getRowHeight={() => "auto"}
+                      sx={{
+                        "& .MuiDataGrid-columnHeaderTitle": {
+                          color: "dark.main",
+                          fontSize: "0.9rem",
+                        },
+                        "& .MuiDataGrid-row": {
+                          color: "text.main",
+                          fontSize: "0.875rem",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          padding: "15px 15px 15px 0",
+                        },
+                        borderWidth: 0,
+                      }}
+                      pagination
+                      slots={{
+                        pagination: CustomPagination,
+                      }}
                     />
                   </MDBox>
                 )}
@@ -182,6 +267,7 @@ function Posts() {
           </Grid>
         )}
       </MDBox>
+
       <Footer />
     </DashboardLayout>
   );
