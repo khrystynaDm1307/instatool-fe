@@ -51,6 +51,9 @@ import Icon from "@mui/material/Icon";
 import profilePicture from "assets/images/team-3.jpg";
 import Influencers from "layouts/pages/influencers";
 import Posts from "layouts/pages/posts";
+import SinglePost from "layouts/pages/single-post";
+import Widgets from "layouts/pages/widgets";
+import Charts from "layouts/pages/charts";
 
 const routes = [
   {
@@ -70,6 +73,12 @@ const routes = [
         key: "profile-settings",
         route: "/pages/account/settings",
         component: <Settings />,
+      },
+      {
+        name: "Settings",
+        key: "profile-settings",
+        route: "/pages/charts",
+        component: <Charts />,
       },
       {
         name: "Logout",
@@ -97,7 +106,14 @@ const routes = [
     icon: <Icon fontSize="medium">dashboard</Icon>,
     noCollapse: true,
     component: <Posts />,
+    subComponents: [
+      {
+        route: "/:id",
+        component: <SinglePost />,
+      },
+    ],
   },
+
   {
     type: "collapse",
     name: "List",

@@ -21,66 +21,95 @@ import PropTypes from "prop-types";
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import { Typography } from "@mui/material";
+import borders from "assets/theme-dark/base/borders";
 
-const MDBadgeDot = forwardRef(({ variant, color, size, badgeContent, font, ...rest }, ref) => {
-  let finalSize;
-  let fontSize;
-  let padding;
+const MDBadgeDot = forwardRef(
+  (
+    { variant, color, size, badgeContent, font, value, noBorder, ...rest },
+    ref
+  ) => {
+    let finalSize;
+    let fontSize;
+    let padding;
 
-  if (size === "sm") {
-    finalSize = "0.5rem";
-    fontSize = "caption";
-    padding = "0.45em 0.775em";
-  } else if (size === "lg") {
-    finalSize = "0.625rem";
-    fontSize = "body2";
-    padding = "0.85em 1.375em";
-  } else if (size === "md") {
-    finalSize = "0.5rem";
-    fontSize = "button";
-    padding = "0.65em 1em";
-  } else {
-    finalSize = "0.375rem";
-    fontSize = "caption";
-    padding = "0.45em 0.775em";
-  }
+    if (size === "sm") {
+      finalSize = "0.5rem";
+      fontSize = "caption";
+      padding = "0.45em 0.775em";
+    } else if (size === "lg") {
+      finalSize = "0.625rem";
+      fontSize = "body2";
+      padding = "0.85em 1.375em";
+    } else if (size === "md") {
+      finalSize = "1.5rem";
+      fontSize = "button";
+      padding = "0.45em 1em";
+    } else {
+      finalSize = "0.375rem";
+      fontSize = "caption";
+      padding = "0.45em 0.775em";
+    }
 
-  const validColors = [
-    "primary",
-    "secondary",
-    "info",
-    "success",
-    "warning",
-    "error",
-    "light",
-    "dark",
-  ];
+    const validColors = [
+      "primary",
+      "secondary",
+      "info",
+      "success",
+      "warning",
+      "error",
+      "light",
+      "dark",
+    ];
 
-  const validColorIndex = validColors.findIndex((el) => el === color);
+    const validColorIndex = validColors.findIndex((el) => el === color);
 
-  return (
-    <MDBox ref={ref} display="flex" alignItems="center" p={padding} {...rest}>
+    return (
       <MDBox
-        component="i"
-        display="inline-block"
-        width={finalSize}
-        height={finalSize}
-        borderRadius="50%"
-        bgColor={validColors[validColorIndex]}
-        variant={variant}
-        mr={1}
-      />
-      <MDTypography
-        variant={fontSize}
-        fontWeight={font.weight ? font.weight : "regular"}
-        color={font.color ? font.color : "dark"}
-        sx={{ lineHeight: 0 }}
+        display="flex"
+        justifyContent="space-between"
+        borderBottom={!noBorder ? "1px solid #F0F2F5" : ""}
+        alignItems="center"
       >
-        {badgeContent}
-      </MDTypography>
-    </MDBox>
-  );
-});
+        <MDBox
+          ref={ref}
+          display="flex"
+          alignItems="center"
+          p={padding}
+          {...rest}
+        >
+          <MDBox
+            component="i"
+            display="inline-block"
+            width={finalSize}
+            height={finalSize}
+            borderRadius="8px"
+            bgColor={validColors[validColorIndex]}
+            variant={variant}
+            mr={1}
+          />
+          <MDTypography
+            variant={fontSize}
+            fontWeight={font.weight ? font.weight : "regular"}
+            color={font.color ? font.color : "dark"}
+            sx={{ lineHeight: 0 }}
+          >
+            {badgeContent}
+          </MDTypography>
+        </MDBox>
+        {value && (
+          <Typography
+            variant="button"
+            pr={2}
+            sx={{ fontSize: "0.875rem", color: "#A8B8D8" }}
+          >
+            {value}
+          </Typography>
+        )}
+      </MDBox>
+    );
+  }
+);
 
 // Setting default values for the props of MDBadgeDot
 MDBadgeDot.defaultProps = {

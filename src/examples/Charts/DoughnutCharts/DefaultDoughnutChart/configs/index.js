@@ -19,7 +19,7 @@ import colors from "assets/theme/base/colors";
 
 const { gradients, dark } = colors;
 
-function configs(labels, datasets, cutout = 60) {
+function configs(labels, datasets, cutout = 140) {
   const backgroundColors = [];
 
   if (datasets.backgroundColors) {
