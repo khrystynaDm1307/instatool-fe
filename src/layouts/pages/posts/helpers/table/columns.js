@@ -71,9 +71,10 @@ const columns = [
     headerAlign: "center",
     valueGetter: (params) => {
       const { likesCount, commentsCount, followersCount } = params.row;
-      const engagement_rate =
-        ((likesCount || 0) + (commentsCount || 0) * 100) / (followersCount || 1);
-      return engagement_rate.toFixed(2) + ' %';
+      const engagement =
+        ((likesCount || 0) + (commentsCount || 0)) / (followersCount || 1);
+      const eng_persent = engagement * 100;
+      return eng_persent.toFixed(2) + " %";
     },
   },
   {
