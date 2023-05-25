@@ -59,6 +59,9 @@ const columns = [
     headerName: "Engagement",
     field: "engagement",
     align: "center",
+    valueGetter: (params) => {
+      return params.row.likesCount + params.row.commentsCount;
+    },
   },
   {
     headerName: "Engagement Rate",
@@ -66,6 +69,12 @@ const columns = [
     width: 200,
     align: "center",
     headerAlign: "center",
+    valueGetter: (params) => {
+      const { likesCount, commentsCount, followersCount } = params.row;
+      const engagement_rate =
+        ((likesCount || 0) + (commentsCount || 0) * 100) / (followersCount || 1);
+      return engagement_rate.toFixed(2) + ' %';
+    },
   },
   {
     headerName: "Mentions",

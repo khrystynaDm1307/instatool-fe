@@ -124,9 +124,9 @@ function Posts() {
 
   useEffect(() => {
     setRowCountState((prevRowCountState) =>
-      data?.data?.count !== undefined ? data?.data?.count : prevRowCountState
+      data?.data?.totalCount !== undefined ? data?.data?.totalCount : prevRowCountState
     );
-  }, [data?.data?.count, setRowCountState, paginationModel]);
+  }, [data?.data?.totalCount, setRowCountState, paginationModel]);
 
   return (
     <DashboardLayout>
@@ -241,7 +241,7 @@ function Posts() {
                 {data?.data && (
                   <MDBox p={1} px={2}>
                     <DataGrid
-                      rows={data?.data?.data?.map((post) => getRows(post))}
+                      rows={data?.data?.filteredPosts?.map((post) => getRows(post))}
                       columns={columns}
                       paginationModel={paginationModel}
                       pageSizeOptions={[10, 50, 100]}
