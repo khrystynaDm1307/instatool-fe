@@ -5,6 +5,7 @@ const columns = [
   {
     headerName: "Influencer",
     field: "user",
+    sortable: false,
     renderCell: (params) => {
       return (
         <InfluencerCell
@@ -17,11 +18,17 @@ const columns = [
     },
     width: 300,
   },
-  { headerName: "Email", field: "email", width: 300 },
-  { headerName: "Followers", field: "followersCount", align: "center" },
+  { headerName: "Email", field: "email", width: 300, sortable: false },
+  {
+    headerName: "Followers",
+    field: "followersCount",
+    align: "center",
+    sortable: false,
+  },
   {
     headerName: "Post",
     field: "post_pic",
+    sortable: false,
     width: 300,
     renderCell: (params) => (
       <img
@@ -32,6 +39,7 @@ const columns = [
   },
   {
     headerName: "Post link",
+    sortable: false,
     field: "url",
     width: 200,
     renderCell: (params) => (
@@ -53,12 +61,19 @@ const columns = [
     headerName: "Caption",
     field: "caption",
     width: 500,
+    sortable: false,
   },
-  { headerName: "Likes Count", field: "likesCount", align: "center" },
+  {
+    headerName: "Likes Count",
+    field: "likesCount",
+    align: "center",
+    sortable: false,
+  },
   {
     headerName: "Engagement",
     field: "engagement",
     align: "center",
+    sortable: false,
     valueGetter: (params) => {
       const { likesCount, commentsCount } = params.row;
       let engagement = 0;
@@ -80,6 +95,7 @@ const columns = [
     width: 200,
     align: "center",
     headerAlign: "center",
+    sortable: false,
     valueGetter: (params) => {
       const { likesCount, commentsCount, followersCount } = params.row;
       if (!followersCount) return "-";
@@ -103,6 +119,7 @@ const columns = [
     headerName: "Mentions",
     field: "mentions",
     width: 400,
+    sortable: false,
     valueGetter: (params) => {
       return params.value?.map((men) => `@${men.username} `)?.join("");
     },
@@ -110,22 +127,25 @@ const columns = [
   {
     headerName: "Hashtags",
     field: "hashtags",
+    sortable: false,
     width: 400,
     valueGetter: (params) => {
       return params.value?.map((hash) => `#${hash.name} `)?.join("");
     },
   },
 
-  { headerName: "Type", field: "type", align: "center" },
+  { headerName: "Type", field: "type", align: "center", sortable: false },
   {
     headerName: "Location",
     field: "locationName",
     width: 300,
+    sortable: false,
   },
   {
     headerName: "Published",
     field: "timestamp",
     width: 300,
+    sortable: false,
     valueGetter: (params) => {
       const date = new Date(params.value);
       const locale = Intl.DateTimeFormat().resolvedOptions().locale;
@@ -137,8 +157,18 @@ const columns = [
       }).format(date);
     },
   },
-  { headerName: "Video plays", field: "videoPlayCount", align: "center" },
-  { headerName: "Video views", field: "videoViewCount", align: "center" },
+  {
+    headerName: "Video plays",
+    field: "videoPlayCount",
+    align: "center",
+    sortable: false,
+  },
+  {
+    headerName: "Video views",
+    field: "videoViewCount",
+    align: "center",
+    sortable: false,
+  },
 ];
 
 export default columns;

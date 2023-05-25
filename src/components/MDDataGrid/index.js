@@ -70,6 +70,8 @@ function MDDataGrid({
       getRowHeight={() => "auto"}
       sx={sx}
       pagination
+      disableColumnFilter
+      disableColumnMenu
       // slots={{
       //   pagination: CustomPagination,
       // }}
