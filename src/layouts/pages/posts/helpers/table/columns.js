@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import InfluencerCell from "../../components/InfluencerCell";
+import InfluencerCell from "../../../../../components/Form/InfluencerCell";
 
 const columns = [
   {
@@ -60,7 +60,18 @@ const columns = [
     field: "engagement",
     align: "center",
     valueGetter: (params) => {
-      return params.row.likesCount + params.row.commentsCount;
+      const { likesCount, commentsCount } = params.row;
+      let engagement = 0;
+      if (likesCount === -1 && commentsCount === -1) {
+        return "-";
+      }
+      if (likesCount > 0) {
+        engagement += likesCount;
+      }
+      if (commentsCount > 0) {
+        engagement += commentsCount;
+      }
+      return engagement;
     },
   },
   {
@@ -71,9 +82,20 @@ const columns = [
     headerAlign: "center",
     valueGetter: (params) => {
       const { likesCount, commentsCount, followersCount } = params.row;
-      const engagement =
-        ((likesCount || 0) + (commentsCount || 0)) / (followersCount || 1);
-      const eng_persent = engagement * 100;
+      if (!followersCount) return "-";
+
+      let engagement = 0;
+
+      if (likesCount === -1 && commentsCount === -1) {
+        return "-";
+      }
+      if (likesCount > 0) {
+        engagement += likesCount;
+      }
+      if (commentsCount > 0) {
+        engagement += commentsCount;
+      }
+      const eng_persent = (engagement / followersCount) * 100;
       return eng_persent.toFixed(2) + " %";
     },
   },
