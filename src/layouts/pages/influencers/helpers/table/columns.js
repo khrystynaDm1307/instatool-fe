@@ -1,18 +1,42 @@
+import InfluencerCell from "../../../../../components/Form/InfluencerCell";
+
 const columns = [
-  { Header: "Influencer", accessor: "user", width: "25%" },
-  { Header: "Followers", accessor: "followersCount", width: "15%" },
   {
-    Header: "Total Engagement",
-    accessor: "total_engagement",
-    width: "10%",
+    headerName: "Influencer",
+    field: "user",
+    sortable: false,
+    renderCell: (params) => {
+      return (
+        <InfluencerCell
+          fullName={params.row.user.ownerFullName}
+          username={params.row.user.ownerUsername}
+          verified={params.row.user.verified}
+          url={params.row.user.url}
+        />
+      );
+    },
+    width: 300,
   },
+  { headerName: "Bio", field: "biography", width: 400, sortable: false },
+  { headerName: "Email", field: "email", width: 300, sortable: false },
   {
-    Header: "Engagement Rate",
-    accessor: "overall_engagement",
-    width: "10%",
+    headerName: "Followers",
+    field: "followersCount",
+    align: "center",
+    sortable: false,
   },
-  { Header: "Biography", accessor: "biography", width: "10%" },
-  { Header: "Email", accessor: "email", width: "10%" },
+
+  {
+    headerName: "Engagement Rate",
+    field: "overall_engagement",
+    width: 200,
+    align: "center",
+    headerAlign: "center",
+    sortable: false,
+    valueGetter: (params) => {
+      return (params.value * 100).toFixed(2) + " %";
+    },
+  },
 ];
 
 export default columns;

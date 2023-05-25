@@ -25,7 +25,6 @@ import Snackbar from "@mui/material/Snackbar";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
-import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
 import MDAlert from "components/MDAlert";
 
@@ -41,7 +40,6 @@ import { useMutation } from "react-query";
 // forms data
 import { Formik, Form } from "formik";
 import form from "./schemas/form";
-import FormField from "./components/FormField";
 import initialValues from "./schemas/initialValues";
 import columns from "./helpers/table/columns";
 import getRows from "./helpers/table/rowsTransorm";
@@ -49,42 +47,37 @@ import getRows from "./helpers/table/rowsTransorm";
 // api
 import influencers from "api/influencers";
 import getInfluencersSchema from "./schemas/validation";
+import MDForm from "components/Form";
+import MD2Alert from "components/MD2Alert";
+import InfluencerForm from "./components/Form";
+import { transformValues } from "../posts/helpers/table/transformValues";
+import MDDataGrid from "components/MDDataGrid";
 
 function Influencers() {
-  const {
-    followers,
-    verified,
-    bio,
-    keywords,
-    mentions,
-    language,
-    hashtags,
-    lastPost,
-    engagement,
-    overallEngagement,
-    postType,
-    contacts,
-    username,
-  } = form.formField;
-
   const [err, setErr] = useState();
-  const { isLoading, data, mutate } = useMutation("influencers", influencers.getInfluencers);
+  const [formValues, setFormValues] = useState({});
+
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 50,
+  });
+
+  const { isLoading, data, mutate } = useMutation(
+    "influencers",
+    influencers.getInfluencers
+  );
+
   console.log(data);
+
   const handleSubmit = (values, handlers) => {
-    const params = {};
+    const params = { ...paginationModel, ...transformValues(values) };
+    setFormValues(params);
+    handleMutate(params);
+    handlers?.setSubmitting(false);
+  };
 
-    for (const key in values) {
-      params[key] =
-        values[key] === "any" || values[key] === "" || values[key] === [] ? null : values[key];
-    }
-
+  const handleMutate = (params) =>
     mutate(params, { onError: (e) => setErr(true) });
-    handlers.setSubmitting(false);
-  };
-
-  const resetFilters = (formData) => {
-    formData.resetForm();
-  };
 
   return (
     <DashboardLayout>
@@ -99,72 +92,13 @@ function Influencers() {
             >
               {(formData) => (
                 <Form id={form.formId} autoComplete="off">
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <FormField {...{ ...username, formData }} />
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={3} mt={1}>
-                    <Grid item xs={12} sm={4}>
-                      <FormField {...{ ...followers, formData }} />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <FormField {...{ ...verified, formData }} />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <FormField {...{ ...bio, formData }} />
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={3} mt={1}>
-                    <Grid item xs={12} sm={4}>
-                      <FormField {...{ ...keywords, formData }} />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <FormField {...{ ...contacts, formData }} />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <FormField {...{ ...language, formData }} />
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={3} mt={1}>
-                    <Grid item xs={12} sm={3}>
-                      <FormField {...{ ...overallEngagement, formData }} />
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                      <FormField {...{ ...engagement, formData }} />
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                      <FormField {...{ ...lastPost, formData }} />
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                      <FormField {...{ ...postType, formData }} />
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={3} mt={1}>
-                    <Grid item xs={12} sm={6}>
-                      <FormField {...{ ...mentions, formData }} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormField {...{ ...hashtags, formData }} />
-                    </Grid>
-                  </Grid>
-
-                  <MDBox mt={4} sx={{ width: "100%", justifyContent: "flex-end" }} display="flex">
-                    <MDButton
-                      variant="outlined"
-                      color="info"
-                      sx={{ mr: 1 }}
-                      onClick={() => resetFilters(formData)}
-                    >
-                      Clear all filters
-                    </MDButton>
-                    <MDButton variant="contained" color="info" disabled={isLoading} type="submit">
-                      Find influencers
-                    </MDButton>
-                  </MDBox>
+                  <MDForm
+                    isLoading={isLoading}
+                    formData={formData}
+                    submitBtnLabel="   Find influencers"
+                  >
+                    <InfluencerForm formData={formData} />
+                  </MDForm>
                 </Form>
               )}
             </Formik>
@@ -172,18 +106,12 @@ function Influencers() {
         </Card>
 
         {err && (
-          <Snackbar
+          <MD2Alert
             open={err}
-            autoHideDuration={6000}
             onClose={() => setErr(false)}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          >
-            <Box>
-              <MDAlert color="error" dismissible>
-                Something went wrong
-              </MDAlert>
-            </Box>
-          </Snackbar>
+            message="Something went wrong"
+            color="error"
+          />
         )}
 
         {(isLoading || data) && (
@@ -197,22 +125,30 @@ function Influencers() {
                 </MDBox>
                 {isLoading && (
                   <Box
-                    sx={{ width: "100%", p: 2, pb: 3, display: "flex", justifyContent: "center" }}
+                    sx={{
+                      width: "100%",
+                      p: 2,
+                      pb: 3,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
                   >
                     <CircularProgress />
                   </Box>
                 )}
-                {data?.data && (
-                  <MDBox py={1}>
-                    <DataTable
-                      table={{
-                        columns,
-                        rows: data.data?.map((owner) => getRows(owner)),
+                 {data?.data && (
+                  <MDBox p={1} px={2}>
+                    <MDDataGrid
+                      rows={data?.data?.filteredPosts?.map((post) =>
+                        getRows(post)
+                      )}
+                      columns={columns}
+                      paginationModel={paginationModel}
+                      onPaginationModelChange={(values) => {
+                        setPaginationModel(values);
+                        handleMutate({ ...formValues, ...values });
                       }}
-                      entriesPerPage={true}
-                      showTotalEntries={true}
-                      isSorted={true}
-                      noEndBorder
+                      rowCount={data?.data?.totalCount}
                     />
                   </MDBox>
                 )}

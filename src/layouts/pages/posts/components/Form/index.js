@@ -54,4 +54,4 @@ function PostsForm({ formData }) {
   );
 }
 
-export default PostsForm
+export default PostsForm;
