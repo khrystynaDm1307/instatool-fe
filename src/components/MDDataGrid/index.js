@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import CustomNoRowsOverlay from "./NoRowsOverlay";
 
 const sx = {
   "& .MuiDataGrid-columnHeaderTitle": {
@@ -55,7 +56,22 @@ function MDDataGrid({
       rowCount !== undefined ? rowCount : prevRowCountState
     );
   }, [rowCount, setRowCountState, paginationModel]);
-
+console.log({rows})
+  if (!rows.length)
+    return (
+      <div style={{ height: 400, width: "100%" }}>
+        <DataGrid
+          slots={{
+            noRowsOverlay: CustomNoRowsOverlay,
+          }}
+          columns={columns}
+          rows={[]}
+          sx={sx}
+          disableColumnFilter
+          disableColumnMenu
+        />
+      </div>
+    );
   return (
     <DataGrid
       rows={rows}
@@ -72,9 +88,9 @@ function MDDataGrid({
       pagination
       disableColumnFilter
       disableColumnMenu
-      // slots={{
-      //   pagination: CustomPagination,
-      // }}
+      slots={{
+        noRowsOverlay: CustomNoRowsOverlay,
+      }}
     />
   );
 }
