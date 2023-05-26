@@ -49,7 +49,7 @@ function ProductImages() {
   return (
     <MDBox>
       <ImgsViewer
-        imgs={[{ src: image1 }, { src: image2 }, { src: image3 }, { src: image4 }, { src: image5 }]}
+        imgs={[{ src: image1 }, { src: image2 }, { src: image3 }, { src: image4 }]}
         isOpen={imgsViewer}
         onClose={closeImgsViewer}
         currImg={imgsViewerCurrent}
@@ -100,32 +100,6 @@ function ProductImages() {
             id={2}
             src={image3}
             alt="small image 3"
-            borderRadius="lg"
-            shadow="md"
-            width="100%"
-            height="5rem"
-            minHeight="5rem"
-            sx={{ cursor: "pointer", objectFit: "cover" }}
-            onClick={handleSetCurrentImage}
-          />
-          <MDBox
-            component="img"
-            id={3}
-            src={image4}
-            alt="small image 4"
-            borderRadius="lg"
-            shadow="md"
-            width="100%"
-            height="5rem"
-            minHeight="5rem"
-            sx={{ cursor: "pointer", objectFit: "cover" }}
-            onClick={handleSetCurrentImage}
-          />
-          <MDBox
-            component="img"
-            id={4}
-            src={image5}
-            alt="small image 5"
             borderRadius="lg"
             shadow="md"
             width="100%"

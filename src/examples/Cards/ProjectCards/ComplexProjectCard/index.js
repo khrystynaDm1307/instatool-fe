@@ -90,7 +90,7 @@ function ComplexProjectCard({ color, image, title, dateTime, description, member
           )}
           {dropdown.menu}
         </MDBox>
-        <MDBox my={2} lineHeight={1}>
+        <MDBox my={2} lineHeight={1} minHeight={70}>
           <MDTypography variant="button" fontWeight="light" color="text">
             {description}
           </MDTypography>
@@ -103,7 +103,7 @@ function ComplexProjectCard({ color, image, title, dateTime, description, member
                 {members.length}
               </MDTypography>
               <MDTypography variant="button" fontWeight="regular" color="secondary">
-                Participants
+                Shared Followers
               </MDTypography>
             </MDBox>
           ) : null}
