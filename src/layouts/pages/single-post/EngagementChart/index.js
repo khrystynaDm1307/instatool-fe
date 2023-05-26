@@ -40,8 +40,8 @@ function EngagementChart({
   likesCount,
   owner,
   commentsCount,
-  videoPlays,
-  videoViews,
+  videoPlayCount: videoPlays,
+  videoViewCount: videoViews,
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;

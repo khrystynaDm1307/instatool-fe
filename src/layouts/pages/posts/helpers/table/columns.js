@@ -33,8 +33,15 @@ const columns = [
     width: 300,
     renderCell: (params) => (
       <img
-        src={`https://storage.googleapis.com/instagram-global-data-images/media/${params.row.id}.jpg`}
+        src={
+          params.row.gcs_picture
+            ? `https://storage.googleapis.com/instagram-global-data-images/media/${params.row.id}.jpg`
+            : params.row.type !== "Video"
+            ? params.row.displayUrl
+            : params.row.videoUrl
+        }
         style={{ width: 200 }}
+        alt="No picture"
       />
     ),
   },

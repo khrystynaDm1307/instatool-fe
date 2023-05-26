@@ -42,8 +42,8 @@ function SinglePost() {
     mentions,
     likesCount,
     commentsCount,
-    videoViews,
-    videoPlays,
+    videoViewCount: videoViews,
+    videoPlayCount: videoPlays,
     tagged_accounts,
   } = data?.data?.post || {};
   const { ownerUsername, ownerFullName, biography, email, followersCount } =

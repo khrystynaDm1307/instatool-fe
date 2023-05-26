@@ -15,13 +15,18 @@ const getRows = (post) => {
     id,
     url,
     shortCode,
+    displayUrl,
+    videoUrl
   } = post;
 
   const { email, followersCount } = owner;
 
   return {
+    ...post,
     user: owner,
     engagement,
+    displayUrl,
+    videoUrl,
     shortCode,
     engagement_rate: (
       (engagement > 0 ? engagement : 0) / (followersCount || 1)
