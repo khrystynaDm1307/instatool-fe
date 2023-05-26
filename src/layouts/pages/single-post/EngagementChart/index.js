@@ -45,9 +45,10 @@ function EngagementChart({
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-  const { data, options } = configs(
-    [],
-    {
+
+  const data1 = {
+    labels: ["Comments", "Followers", "Video views", "Likes", "Video plays"],
+    datasets: {
       label: "Projects",
       backgroundColors: [
         "info",
@@ -57,13 +58,94 @@ function EngagementChart({
         "success",
         "warning",
       ],
-      data: [15, 20, 12, 30, 30],
+      data: [
+        commentsCount || 0,
+        owner.followersCount || 0,
+        videoViews || 0,
+        likesCount || 0,
+        videoPlays | 0,
+      ],
     },
-    120
-  );
+  };
   return (
     <Card sx={{ height: "100%", p: 2 }}>
+      <MDTypography variant="h6">Engagement</MDTypography>
       <MDBox
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        px={2}
+      >
+        <MDBox position="relative">
+          <DefaultDoughnutChart chart={data1} />
+          <MDBox sx={{ position: "absolute", top: "140px", left: "110px" }}>
+            <MDTypography textAlign="center" variant="h4">
+              {(
+                ((likesCount + commentsCount + videoPlays ||
+                  0 + videoViews ||
+                  0) *
+                  100) /
+                (owner.followersCount || 1)
+              ).toFixed(2)}
+              %
+            </MDTypography>
+            <MDTypography variant="button">Engagement rate</MDTypography>
+          </MDBox>
+        </MDBox>
+
+        <MDBox sx={{ width: "100%" }}>
+          <MDBox pr={1}>
+            <MDBox mb={1}>
+              <MDBadgeDot
+                color="primary"
+                size="md"
+                badgeContent="Followers"
+                font={{ weight: "bold" }}
+                value={owner.followersCount || "-"}
+              />
+            </MDBox>
+            <MDBox mb={1}>
+              <MDBadgeDot
+                color="dark"
+                size="md"
+                badgeContent="Likes"
+                font={{ weight: "bold" }}
+                value={likesCount === -1 ? "-" : likesCount || "-"}
+              />
+            </MDBox>
+            <MDBox mb={1}>
+              <MDBadgeDot
+                color="info"
+                size="md"
+                badgeContent="Comments"
+                font={{ weight: "bold" }}
+                value={commentsCount === -1 ? "-" : commentsCount || "-"}
+              />
+            </MDBox>
+            <MDBox mb={1}>
+              <MDBadgeDot
+                color="success"
+                size="md"
+                badgeContent="Plays"
+                font={{ weight: "bold" }}
+                value={videoPlays || "-"}
+              />
+            </MDBox>
+            <MDBox mb={1}>
+              <MDBadgeDot
+                color="warning"
+                size="md"
+                badgeContent="Views"
+                font={{ weight: "bold" }}
+                value={videoViews || "-"}
+                noBorder
+              />
+            </MDBox>
+          </MDBox>
+        </MDBox>
+      </MDBox>
+
+      {/* <MDBox
         display="flex"
         justifyContent="space-between"
         alignItems="center"
@@ -81,64 +163,7 @@ function EngagementChart({
             <Icon>priority_high</Icon>
           </MDButton>
         </Tooltip>
-      </MDBox>
-      <MDBox mt={3}>
-        <Grid container alignItems="center">
-          <Grid item xs={5}>
-            <Doughnut data={data} options={options} />
-          </Grid>
-          <Grid item xs={7}>
-            <MDBox pr={1}>
-              <MDBox mb={1}>
-                <MDBadgeDot
-                  color="primary"
-                  size="md"
-                  badgeContent="Followers"
-                  font={{ weight: "bold" }}
-                  value={owner.followersCount || "-"}
-                />
-              </MDBox>
-              <MDBox mb={1}>
-                <MDBadgeDot
-                  color="dark"
-                  size="md"
-                  badgeContent="Likes"
-                  font={{ weight: "bold" }}
-                  value={likesCount === -1 ? "-" : likesCount || "-"}
-                />
-              </MDBox>
-              <MDBox mb={1}>
-                <MDBadgeDot
-                  color="info"
-                  size="md"
-                  badgeContent="Comments"
-                  font={{ weight: "bold" }}
-                  value={commentsCount === -1 ? "-" : commentsCount || "-"}
-                />
-              </MDBox>
-              <MDBox mb={1}>
-                <MDBadgeDot
-                  color="success"
-                  size="md"
-                  badgeContent="Plays"
-                  font={{ weight: "bold" }}
-                  value={videoPlays || "-"}
-                />
-              </MDBox>
-              <MDBox mb={1}>
-                <MDBadgeDot
-                  color="warning"
-                  size="md"
-                  badgeContent="Views"
-                  font={{ weight: "bold" }}
-                  value={videoViews || "-"}
-                  noBorder
-                />
-              </MDBox>
-            </MDBox>
-          </Grid>
-        </Grid>
-      </MDBox>
+      </MDBox> */}
     </Card>
   );
 }

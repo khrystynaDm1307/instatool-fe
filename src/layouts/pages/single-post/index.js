@@ -142,7 +142,7 @@ function SinglePost() {
           </Typography>
 
           <Grid container spacing={6}>
-            <Grid item lg={6}>
+            <Grid item lg={5} md={12}>
               <PostsCard
                 image={booking1}
                 description={caption}
@@ -151,7 +151,7 @@ function SinglePost() {
                 title=""
               />
             </Grid>
-            <Grid item lg={6} md={12}>
+            <Grid item lg={7} md={12}>
               <Typography variant="h6">Engagement</Typography>
               <MDTypography
                 component="p"
