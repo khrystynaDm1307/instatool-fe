@@ -27,7 +27,15 @@ import MDTypography from "components/MDTypography";
 
 import ProductImages from "layouts/ecommerce/products/product-page/components/ProductImages";
 
-function PostsCard({ image, title, description, price, location, action }) {
+function PostsCard({ image, title, description, timestamp, location, action }) {
+  const date = new Date(timestamp);
+  const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const data_str = Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeZone,
+  }).format(date);
+
   return (
     <Card
       sx={{
@@ -52,7 +60,12 @@ function PostsCard({ image, title, description, price, location, action }) {
         </MDBox>
       </MDBox>
 
-      <MDBox display="flex" flexDirection="column" justifyContent="space-between" height="100%">
+      <MDBox
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+        height="100%"
+      >
         <MDBox textAlign="center" pt={3} px={3}>
           <MDBox
             display="flex"
@@ -74,17 +87,18 @@ function PostsCard({ image, title, description, price, location, action }) {
             justifyContent="space-between"
             alignItems="center"
             pt={0.5}
-         
             px={3}
             lineHeight={1}
           >
             <MDTypography variant="button" fontWeight="light" color="text">
-             Published: 14th of May 2023 
+              Published: {data_str || date.toLocaleDateString() || ""}
             </MDTypography>
             <MDBox color="text" display="flex" alignItems="center">
-              <Icon color="inherit" sx={{ m: 0.5 }}>
-                place
-              </Icon>
+              {location && (
+                <Icon color="inherit" sx={{ m: 0.5 }}>
+                  place
+                </Icon>
+              )}
               <MDTypography variant="button" fontWeight="light" color="text">
                 {location}
               </MDTypography>

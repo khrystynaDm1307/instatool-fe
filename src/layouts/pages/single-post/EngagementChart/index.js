@@ -36,7 +36,13 @@ import defaultDoughnutChartData from "layouts/pages/charts/data/defaultDoughnutC
 import { Doughnut } from "react-chartjs-2";
 import configs from "examples/Charts/DoughnutCharts/DefaultDoughnutChart/configs";
 
-function EngagementChart() {
+function EngagementChart({
+  likesCount,
+  owner,
+  commentsCount,
+  videoPlays,
+  videoViews,
+}) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const { data, options } = configs(
@@ -89,7 +95,7 @@ function EngagementChart() {
                   size="md"
                   badgeContent="Followers"
                   font={{ weight: "bold" }}
-                  value={300}
+                  value={owner.followersCount || "-"}
                 />
               </MDBox>
               <MDBox mb={1}>
@@ -98,7 +104,7 @@ function EngagementChart() {
                   size="md"
                   badgeContent="Likes"
                   font={{ weight: "bold" }}
-                  value={"4,043"}
+                  value={likesCount === -1 ? "-" : likesCount || "-"}
                 />
               </MDBox>
               <MDBox mb={1}>
@@ -107,7 +113,7 @@ function EngagementChart() {
                   size="md"
                   badgeContent="Comments"
                   font={{ weight: "bold" }}
-                  value={"212"}
+                  value={commentsCount === -1 ? "-" : commentsCount || "-"}
                 />
               </MDBox>
               <MDBox mb={1}>
@@ -116,7 +122,7 @@ function EngagementChart() {
                   size="md"
                   badgeContent="Plays"
                   font={{ weight: "bold" }}
-                  value={"14,043"}
+                  value={videoPlays || "-"}
                 />
               </MDBox>
               <MDBox mb={1}>
@@ -125,7 +131,7 @@ function EngagementChart() {
                   size="md"
                   badgeContent="Views"
                   font={{ weight: "bold" }}
-                  value={"1,435"}
+                  value={videoViews || "-"}
                   noBorder
                 />
               </MDBox>

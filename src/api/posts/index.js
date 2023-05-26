@@ -1,9 +1,13 @@
 import api from "api/api";
 
-export const getPosts = async (params) => {
+const getPosts = async (params) => {
   return api.get(`/posts`, { params });
 };
 
-const posts = { getPosts };
+const getPostById = async (id) => {
+  return api.get(`/posts/${id}`);
+};
+
+const posts = { getPosts, getPostById };
 
 export default posts;

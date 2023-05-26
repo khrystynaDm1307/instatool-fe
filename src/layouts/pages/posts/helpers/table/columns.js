@@ -46,7 +46,7 @@ const columns = [
     align: "center",
     headerAlign: "center",
     renderCell: (params) => (
-      <Link to={`/posts/${params.row.shortCode}`}>
+      <Link to={`/posts/${params.row.id}`}>
         <Typography
           variant="h6"
           sx={{
