@@ -2,7 +2,7 @@ const initialValues = {
   period: "any",
   mentions: [],
   hashtags: [],
-  keywords: "any",
+  keywords: "",
   engagement: "any",
   likes: "any",
   postType: "any",
