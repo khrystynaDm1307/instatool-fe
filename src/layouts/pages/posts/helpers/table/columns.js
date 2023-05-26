@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material";
 import InfluencerCell from "../../../../../components/Form/InfluencerCell";
+import { Link } from "react-router-dom";
 
 const columns = [
   {
@@ -42,19 +43,22 @@ const columns = [
     sortable: false,
     field: "url",
     width: 200,
+    align: "center",
+    headerAlign: "center",
     renderCell: (params) => (
-      <a href={params.value} target="_blanck">
+      <Link to={`/posts/${params.row.shortCode}`}>
         <Typography
           variant="h6"
           sx={{
             fontWeight: 400,
             color: "#7b809a",
-            textDecoration: "underline",
+            fontSize: "0.875rem",
+            ":hover": { cursor: "pointer" },
           }}
         >
           Post page
-        </Typography>{" "}
-      </a>
+        </Typography>
+      </Link>
     ),
   },
   {

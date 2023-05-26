@@ -1,5 +1,3 @@
-
-
 const getRows = (post) => {
   const {
     owner,
@@ -16,6 +14,7 @@ const getRows = (post) => {
     videoViewCount,
     id,
     url,
+    shortCode,
   } = post;
 
   const { email, followersCount } = owner;
@@ -23,6 +22,7 @@ const getRows = (post) => {
   return {
     user: owner,
     engagement,
+    shortCode,
     engagement_rate: (
       (engagement > 0 ? engagement : 0) / (followersCount || 1)
     ).toFixed(2),
