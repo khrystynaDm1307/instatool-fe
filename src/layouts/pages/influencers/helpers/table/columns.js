@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import InfluencerCell from "../../../../../components/Form/InfluencerCell";
+import MDTypography from "components/MDTypography";
 
 const columns = [
   {
@@ -35,6 +37,24 @@ const columns = [
     sortable: false,
     valueGetter: (params) => {
       return (params.value * 100).toFixed(2) + " %";
+    },
+  },
+
+  {
+    headerName: "Post",
+    field: "lastPost",
+    width: 200,
+    align: "center",
+    headerAlign: "center",
+    sortable: false,
+    renderCell: (params) => {
+      return (
+        <Link to={`/posts/${params.value?.id}`}>
+          <MDTypography variant="button" color="text">
+            {params.value?.caption}
+          </MDTypography>
+        </Link>
+      );
     },
   },
 ];
