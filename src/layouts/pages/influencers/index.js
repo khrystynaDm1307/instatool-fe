@@ -52,10 +52,14 @@ import MD2Alert from "components/MD2Alert";
 import InfluencerForm from "./components/Form";
 import { transformValues } from "../posts/helpers/table/transformValues";
 import MDDataGrid from "components/MDDataGrid";
+import FormField from "components/Form/FormField";
+import { MenuItem, Select, Typography } from "@mui/material";
+import { SORT_VALUES } from "./schemas/values";
 
 function Influencers() {
   const [err, setErr] = useState();
   const [formValues, setFormValues] = useState({});
+  const [sortValue, setSortValue] = useState(SORT_VALUES[1].value);
 
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
@@ -72,12 +76,18 @@ function Influencers() {
   const handleSubmit = (values, handlers) => {
     const params = { ...paginationModel, ...transformValues(values) };
     setFormValues(params);
-    handleMutate(params);
+    handleMutate({ ...params, sort: sortValue });
     handlers?.setSubmitting(false);
   };
 
   const handleMutate = (params) =>
-    mutate(params, { onError: (e) => setErr(true) });
+    mutate({ ...params }, { onError: (e) => setErr(true) });
+
+  const handleSort = (e) => {
+    const value = e.target.value;
+    setSortValue(value);
+    handleMutate({ ...formValues, sort: value });
+  };
 
   return (
     <DashboardLayout>
@@ -119,7 +129,7 @@ function Influencers() {
             <Grid item xs={12}>
               <Card>
                 <MDBox pt={3} px={3}>
-                  <MDTypography variant="h6" fontWeight="medium">
+                  <MDTypography variant="h5" fontWeight="medium">
                     Influencers
                   </MDTypography>
                 </MDBox>
@@ -136,8 +146,27 @@ function Influencers() {
                     <CircularProgress />
                   </Box>
                 )}
-                 {data?.data && (
+                {data?.data && (
                   <MDBox p={1} px={2}>
+                    <MDBox maxWidth={300} marginLeft={"auto"}>
+                      <Typography mb={1} variant="h6">
+                        Sort by
+                      </Typography>
+                      <Select
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "100%", p: "0.75rem", pl: 0, mb: 2 }}
+                        value={sortValue}
+                        name="sort"
+                        onChange={handleSort}
+                      >
+                        {SORT_VALUES.map((item) => (
+                          <MenuItem value={item.value} key={item.value}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </MDBox>
                     <MDDataGrid
                       rows={data?.data?.filteredPosts?.map((post) =>
                         getRows(post)
@@ -146,7 +175,11 @@ function Influencers() {
                       paginationModel={paginationModel}
                       onPaginationModelChange={(values) => {
                         setPaginationModel(values);
-                        handleMutate({ ...formValues, ...values });
+                        handleMutate({
+                          ...formValues,
+                          ...values,
+                          sort: sortValue,
+                        });
                       }}
                       rowCount={data?.data?.totalCount}
                     />

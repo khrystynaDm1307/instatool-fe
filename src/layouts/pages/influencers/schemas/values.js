@@ -205,3 +205,10 @@ export const CONTACTS_VALUES = [
     value: "email",
   },
 ];
+
+export const SORT_VALUES = [
+  { label: "Followers (from low to high)", value: "followersCount_asc" },
+  { label: "Followers (from high to low)", value: "followersCount_desc" },
+  { label: "Engagement rate (from low to high)", value: "engagement_asc" },
+  { label: "Engagement rate (from high to low)", value: "enagagement_desc" },
+];

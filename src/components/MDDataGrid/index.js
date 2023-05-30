@@ -56,7 +56,7 @@ function MDDataGrid({
       rowCount !== undefined ? rowCount : prevRowCountState
     );
   }, [rowCount, setRowCountState, paginationModel]);
-console.log({rows})
+
   if (!rows.length)
     return (
       <div style={{ height: 400, width: "100%" }}>
@@ -72,6 +72,7 @@ console.log({rows})
         />
       </div>
     );
+
   return (
     <DataGrid
       rows={rows}
