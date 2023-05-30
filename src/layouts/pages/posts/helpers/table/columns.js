@@ -151,7 +151,16 @@ const columns = [
     width: 400,
     renderCell: (params) => (
       <Link to={`/posts/${params.row.id}`}>
-        <MDTypography variant="button" color="text">
+        <MDTypography
+          variant="button"
+          color="text"
+          sx={{
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: "3",
+            overflow: "hidden",
+          }}
+        >
           {params.row.hashtags?.map((hash) => `#${hash.name} `)?.join("")}
         </MDTypography>
       </Link>
