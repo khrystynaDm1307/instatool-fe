@@ -52,7 +52,6 @@ import MD2Alert from "components/MD2Alert";
 import InfluencerForm from "./components/Form";
 import { transformValues } from "../posts/helpers/table/transformValues";
 import MDDataGrid from "components/MDDataGrid";
-import FormField from "components/Form/FormField";
 import { MenuItem, Select, Typography } from "@mui/material";
 import { SORT_VALUES } from "./schemas/values";
 

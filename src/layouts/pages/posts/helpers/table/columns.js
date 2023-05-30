@@ -32,6 +32,7 @@ const columns = [
     sortable: false,
     width: 300,
     renderCell: (params) => (
+      <Link to={`/posts/${params.row.id}`}>
       <img
         src={
           params.row.gcs_picture
@@ -43,29 +44,7 @@ const columns = [
         style={{ width: 200 }}
         alt="No picture"
       />
-    ),
-  },
-  {
-    headerName: "Post link",
-    sortable: false,
-    field: "url",
-    width: 200,
-    align: "center",
-    headerAlign: "center",
-    renderCell: (params) => (
-      <Link to={`/posts/${params.row.id}`}>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 400,
-            color: "#7b809a",
-            fontSize: "0.875rem",
-            ":hover": { cursor: "pointer" },
-          }}
-        >
-          Post page
-        </Typography>
-      </Link>
+        </Link>
     ),
   },
   {
