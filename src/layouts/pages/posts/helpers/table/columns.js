@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import InfluencerCell from "../../../../../components/Form/InfluencerCell";
 import { Link } from "react-router-dom";
+import MDTypography from "components/MDTypography";
 
 const columns = [
   {
@@ -33,18 +34,18 @@ const columns = [
     width: 300,
     renderCell: (params) => (
       <Link to={`/posts/${params.row.id}`}>
-      <img
-        src={
-          params.row.gcs_picture
-            ? `https://storage.googleapis.com/instagram-global-data-images/media/${params.row.id}.jpg`
-            : params.row.type !== "Video"
-            ? params.row.displayUrl
-            : params.row.videoUrl
-        }
-        style={{ width: 200 }}
-        alt="No picture"
-      />
-        </Link>
+        <img
+          src={
+            params.row.gcs_picture
+              ? `https://storage.googleapis.com/instagram-global-data-images/media/${params.row.id}.jpg`
+              : params.row.type !== "Video"
+              ? params.row.displayUrl
+              : params.row.videoUrl
+          }
+          style={{ width: 200 }}
+          alt="No picture"
+        />
+      </Link>
     ),
   },
   {
@@ -52,6 +53,13 @@ const columns = [
     field: "caption",
     width: 500,
     sortable: false,
+    renderCell: (params) => (
+      <Link to={`/posts/${params.row.id}`}>
+        <MDTypography variant="button" color="text">
+          {params.row.caption}
+        </MDTypography>
+      </Link>
+    ),
   },
   {
     headerName: "Likes",
@@ -132,9 +140,13 @@ const columns = [
     field: "hashtags",
     sortable: false,
     width: 400,
-    valueGetter: (params) => {
-      return params.value?.map((hash) => `#${hash.name} `)?.join("");
-    },
+    renderCell: (params) => (
+      <Link to={`/posts/${params.row.id}`}>
+        <MDTypography variant="button" color="text">
+          {params.row.hashtags?.map((hash) => `#${hash.name} `)?.join("")}
+        </MDTypography>
+      </Link>
+    ),
   },
 
   { headerName: "Type", field: "type", align: "center", sortable: false },
