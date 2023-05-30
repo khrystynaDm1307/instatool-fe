@@ -109,3 +109,10 @@ export const PERIOD_VALUES = [
     value: 30 * 6,
   },
 ];
+
+export const SORT_POSTS_VALUES = [
+  { label: "Likes (from low to high)", value: "likesCount_asc" },
+  { label: "Likes (from high to low)", value: "likesCount_desc" },
+  { label: "Published (from low to high)", value: "timestamp_asc" },
+  { label: "Published (from high to low)", value: "timestamp_desc" },
+];

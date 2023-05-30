@@ -49,6 +49,8 @@ import MDForm from "components/Form";
 import MDDataGrid from "components/MDDataGrid";
 import MD2Alert from "components/MD2Alert";
 import { transformValues } from "./helpers/table/transformValues";
+import { MenuItem, Select, Typography } from "@mui/material";
+import { SORT_POSTS_VALUES } from "./schemas/values";
 
 function Posts() {
   const [paginationModel, setPaginationModel] = useState({
@@ -59,16 +61,23 @@ function Posts() {
   const [err, setErr] = useState();
   const { isLoading, data, mutate } = useMutation("posts", posts.getPosts);
   const [formValues, setFormValues] = useState({});
+  const [sortValue, setSortValue] = useState(SORT_POSTS_VALUES[1].value);
 
   const handleSubmit = (values, handlers) => {
     const params = { ...paginationModel, ...transformValues(values) };
     setFormValues(params);
-    handleMutate(params);
+    handleMutate({ ...params, sort: sortValue });
     handlers?.setSubmitting(false);
   };
 
   const handleMutate = (params) =>
     mutate(params, { onError: (e) => setErr(true) });
+
+  const handleSort = (e) => {
+    const value = e.target.value;
+    setSortValue(value);
+    handleMutate({ ...formValues, sort: value });
+  };
 
   return (
     <DashboardLayout>
@@ -125,6 +134,25 @@ function Posts() {
                 )}
                 {data?.data && (
                   <MDBox p={1} px={2}>
+                    <MDBox maxWidth={300} marginLeft={"auto"}>
+                      <Typography mb={1} variant="h6">
+                        Sort by
+                      </Typography>
+                      <Select
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "100%", p: "0.75rem", pl: 0, mb: 2 }}
+                        value={sortValue}
+                        name="sort"
+                        onChange={handleSort}
+                      >
+                        {SORT_POSTS_VALUES.map((item) => (
+                          <MenuItem value={item.value} key={item.value}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </MDBox>
                     <MDDataGrid
                       rows={data?.data?.filteredPosts?.map((post) =>
                         getRows(post)
@@ -133,7 +161,11 @@ function Posts() {
                       paginationModel={paginationModel}
                       onPaginationModelChange={(values) => {
                         setPaginationModel(values);
-                        handleMutate({ ...formValues, ...values });
+                        handleMutate({
+                          ...formValues,
+                          ...values,
+                          sort: sortValue,
+                        });
                       }}
                       rowCount={data?.data?.totalCount}
                     />
