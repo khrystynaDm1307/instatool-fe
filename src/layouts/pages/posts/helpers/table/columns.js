@@ -42,7 +42,7 @@ const columns = [
               ? params.row.displayUrl
               : params.row.videoUrl
           }
-          style={{ width: 200 }}
+          style={{ width: 100 }}
           alt="No picture"
         />
       </Link>
