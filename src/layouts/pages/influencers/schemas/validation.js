@@ -4,7 +4,7 @@ const getInfluencersSchema = Yup.object().shape({
   username: Yup.string()
     .min(2, "Username must contain at least 2 characters")
     .max(50, "Username mustn't contain more than 50 characters")
-    .required("Username is required"),
+    .optional(""),
   //   followers_min: Yup.number().optional(),
   //   followers_max: Yup.number().optional(),
 

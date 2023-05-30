@@ -1,8 +1,7 @@
 import api from "api/api";
 
-export const getInfluencers = async (data) => {
-  const { username, ...params } = data;
-  return api.get(`/influencers/${username}`, { params });
+export const getInfluencers = async (params) => {
+  return api.get(`/influencers`, { params });
 };
 
 const influencers = { getInfluencers };
