@@ -22,10 +22,11 @@ import MDTypography from "components/MDTypography";
 
 import VerifiedIcon from "@mui/icons-material/Verified";
 import Avatar from "@mui/material/Avatar";
+import { Link } from "react-router-dom";
 
 function InfluencerCell({ fullName, username, verified, url }) {
   return (
-    <a href={url} target="_blank">
+    <Link to={`/influencers/${username}`}>
       <MDBox display="flex" alignItems="center" px={2}>
         <MDBox mr={2}>
           <Avatar
@@ -43,7 +44,7 @@ function InfluencerCell({ fullName, username, verified, url }) {
           <MDTypography variant="button">@{username}</MDTypography>
         </MDBox>
       </MDBox>
-    </a>
+    </Link>
   );
 }
 

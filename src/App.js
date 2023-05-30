@@ -51,7 +51,8 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 // Images
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
-import SinglePost from "layouts/pages/single-post";
+import SinglePost from "layouts/pages/post-details";
+import InfluencerDetails from "layouts/pages/influencer-details";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -167,6 +168,7 @@ export default function App() {
         {layout === "vr" && <Configurator />}
         <Routes>
           {getRoutes(routes)}
+          <Route path="/influencers/:username" element={<InfluencerDetails/>} />
           <Route path="/posts/:id" element={<SinglePost/>} />
           <Route path="*" element={<Navigate to="/influencers" />} />
         </Routes>
@@ -193,6 +195,7 @@ export default function App() {
       <Routes>
         {getRoutes(routes)}
         <Route path="/posts/:id" element={<SinglePost/>} />
+        <Route path="/influencers/:username" element={<InfluencerDetails/>} />
         <Route path="*" element={<Navigate to="/influencers" />} />
       </Routes>
     </ThemeProvider>

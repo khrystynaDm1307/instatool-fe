@@ -75,7 +75,7 @@ const columns = [
     sortable: false,
   },
   {
-    headerName: "Likes Count",
+    headerName: "Likes",
     field: "likesCount",
     align: "center",
     sortable: false,

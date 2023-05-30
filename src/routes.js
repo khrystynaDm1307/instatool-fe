@@ -51,8 +51,7 @@ import Icon from "@mui/material/Icon";
 import profilePicture from "assets/images/team-3.jpg";
 import Influencers from "layouts/pages/influencers";
 import Posts from "layouts/pages/posts";
-import SinglePost from "layouts/pages/single-post";
-import Widgets from "layouts/pages/widgets";
+import SinglePost from "layouts/pages/post-details";
 import Charts from "layouts/pages/charts";
 
 const routes = [
