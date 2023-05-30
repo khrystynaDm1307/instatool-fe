@@ -86,7 +86,12 @@ const columns = [
     align: "center",
     sortable: false,
     valueGetter: (params) => {
-      const { likesCount, commentsCount } = params.row;
+      const {
+        likesCount,
+        commentsCount,
+        videoViewCount = 0,
+        videoPlayCount = 0,
+      } = params.row;
       let engagement = 0;
       if (likesCount === -1 && commentsCount === -1) {
         return "-";
@@ -97,6 +102,7 @@ const columns = [
       if (commentsCount > 0) {
         engagement += commentsCount;
       }
+      engagement += videoPlayCount + videoViewCount;
       return engagement;
     },
   },
@@ -108,7 +114,13 @@ const columns = [
     headerAlign: "center",
     sortable: false,
     valueGetter: (params) => {
-      const { likesCount, commentsCount, followersCount } = params.row;
+      const {
+        likesCount,
+        commentsCount,
+        followersCount,
+        videoViewCount = 0,
+        videoPlayCount = 0,
+      } = params.row;
       if (!followersCount) return "-";
 
       let engagement = 0;
@@ -122,6 +134,7 @@ const columns = [
       if (commentsCount > 0) {
         engagement += commentsCount;
       }
+      engagement += videoPlayCount + videoViewCount;
       const eng_persent = (engagement / followersCount) * 100;
       return eng_persent.toFixed(2) + " %";
     },
