@@ -187,11 +187,11 @@ export const POST_TYPE_VALUES = [
   },
   {
     name: "Video",
-    value: "video",
+    value: "Video",
   },
   {
     name: "Image",
-    value: "image",
+    value: "Image",
   },
 ];
 

@@ -92,7 +92,6 @@ function SinglePost() {
     </MDBox>
   ));
 
-  console.log(data?.data);
   const mentions_arr = mentions?.map((hashtag) => `@${hashtag.username}`) || [];
 
   const tagged_accounts_arr =
@@ -191,24 +190,29 @@ function SinglePost() {
                     />
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={6}>
-                  <MDBox mb={1.5}>
-                    <ComplexStatisticsCard
-                      icon="store"
-                      title="Plays"
-                      count={videoPlays || "-"}
-                    />
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} md={6} lg={6}>
-                  <MDBox mb={1.5}>
-                    <ComplexStatisticsCard
-                      icon="person_add"
-                      title="Video Views"
-                      count={videoViews || "-"}
-                    />
-                  </MDBox>
-                </Grid>
+                {(videoPlays ||
+                  videoPlays === 0) && (
+                    <Grid item xs={12} md={6} lg={6}>
+                      <MDBox mb={1.5}>
+                        <ComplexStatisticsCard
+                          icon="store"
+                          title="Plays"
+                          count={videoPlays || "-"}
+                        />
+                      </MDBox>
+                    </Grid>
+                  )}
+                {(videoViews || videoViews === 0) && (
+                  <Grid item xs={12} md={6} lg={6}>
+                    <MDBox mb={1.5}>
+                      <ComplexStatisticsCard
+                        icon="person_add"
+                        title="Video Views"
+                        count={videoViews || "-"}
+                      />
+                    </MDBox>
+                  </Grid>
+                )}
               </Grid>
               <Box>
                 <EngagementChart {...(data?.data?.post || {})} />
