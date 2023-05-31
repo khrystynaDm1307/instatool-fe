@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import FormField from "components/Form/FormField";
 import form from "../../schemas/form";
+import FilterComponent from "../Autocomplete";
 
 function PostsForm({ formData }) {
   const {
@@ -49,6 +50,9 @@ function PostsForm({ formData }) {
         <Grid item xs={12} sm={6}>
           <FormField {...{ ...hashtags, formData }} />
         </Grid>
+      </Grid>
+      <Grid item lg={12}>
+        <FilterComponent />
       </Grid>
     </>
   );
