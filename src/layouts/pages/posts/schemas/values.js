@@ -111,8 +111,12 @@ export const PERIOD_VALUES = [
 ];
 
 export const SORT_POSTS_VALUES = [
-  { label: "Likes (from low to high)", value: "likesCount_asc" },
-  { label: "Likes (from high to low)", value: "likesCount_desc" },
-  { label: "Published (from low to high)", value: "timestamp_asc" },
-  { label: "Published (from high to low)", value: "timestamp_desc" },
+  { label: "Likes (from low to high)", value: "post.likesCount-asc" },
+  { label: "Likes (from high to low)", value: "post.likesCount-desc" },
+  { label: "Published (from low to high)", value: "post.timestamp-asc" },
+  { label: "Published (from high to low)", value: "post.timestamp-desc" },
+  { label: "Engagement (from low to high)", value: "engagement-asc" },
+  { label: "Engagement (from high to low)", value: "engagement-desc" },
+  { label: "Engagement rate(from low to high)", value: "engagement_rate-asc" },
+  { label: "Engagement rate (from high to low)", value: "engagement_rate-desc" },
 ];

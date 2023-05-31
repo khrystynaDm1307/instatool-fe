@@ -75,6 +75,7 @@ const columns = [
     field: "likesCount",
     align: "center",
     sortable: false,
+    valueGetter: (params) => (params.value === -1 ? "-" : params.value),
   },
   {
     headerName: "Engagement",
@@ -88,17 +89,9 @@ const columns = [
         videoViewCount = 0,
         videoPlayCount = 0,
       } = params.row;
-      let engagement = 0;
-      if (likesCount === -1 && commentsCount === -1) {
-        return "-";
-      }
-      if (likesCount > 0) {
-        engagement += likesCount;
-      }
-      if (commentsCount > 0) {
-        engagement += commentsCount;
-      }
-      engagement += videoPlayCount + videoViewCount;
+
+      const engagement =
+        videoPlayCount + videoViewCount + likesCount + commentsCount;
       return engagement;
     },
   },
@@ -117,20 +110,11 @@ const columns = [
         videoViewCount = 0,
         videoPlayCount = 0,
       } = params.row;
-      if (!followersCount) return "-";
+      if (!followersCount) return "0.00 %";
 
-      let engagement = 0;
+      const engagement =
+        videoPlayCount + videoViewCount + likesCount + commentsCount;
 
-      if (likesCount === -1 && commentsCount === -1) {
-        return "-";
-      }
-      if (likesCount > 0) {
-        engagement += likesCount;
-      }
-      if (commentsCount > 0) {
-        engagement += commentsCount;
-      }
-      engagement += videoPlayCount + videoViewCount;
       const eng_persent = (engagement / followersCount) * 100;
       return eng_persent.toFixed(2) + " %";
     },

@@ -69,7 +69,7 @@ function Posts() {
     handleMutate({ ...params, sort: sortValue });
     handlers?.setSubmitting(false);
   };
-
+console.log(data)
   const handleMutate = (params) =>
     mutate(params, { onError: (e) => setErr(true) });
 
