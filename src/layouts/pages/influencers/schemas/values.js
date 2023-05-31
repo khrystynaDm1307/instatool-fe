@@ -207,8 +207,8 @@ export const CONTACTS_VALUES = [
 ];
 
 export const SORT_VALUES = [
-  { label: "Followers (from low to high)", value: "followersCount_asc" },
-  { label: "Followers (from high to low)", value: "followersCount_desc" },
-  { label: "Engagement rate (from low to high)", value: "engagement_asc" },
-  { label: "Engagement rate (from high to low)", value: "enagagement_desc" },
+  { label: "Followers (from low to high)", value: "postOwner.followersCount-asc" },
+  { label: "Followers (from high to low)", value: "postOwner.followersCount-desc" },
+  { label: "Engagement rate (from low to high)", value: "engagement_rate-asc" },
+  { label: "Engagement rate (from high to low)", value: "engagement_rate-desc" },
 ];
