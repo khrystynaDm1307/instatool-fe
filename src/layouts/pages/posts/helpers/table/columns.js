@@ -18,7 +18,7 @@ const columns = [
         />
       );
     },
-    width: 300,
+    width: 400,
   },
   { headerName: "Email", field: "email", width: 300, sortable: false },
   {

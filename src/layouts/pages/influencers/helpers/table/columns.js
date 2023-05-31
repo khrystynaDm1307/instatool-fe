@@ -17,7 +17,7 @@ const columns = [
         />
       );
     },
-    width: 300,
+    width: 400,
   },
   { headerName: "Bio", field: "biography", width: 400, sortable: false },
   { headerName: "Email", field: "email", width: 300, sortable: false },
@@ -36,21 +36,30 @@ const columns = [
     headerAlign: "center",
     sortable: false,
     valueGetter: (params) => {
-      return (params.value * 100).toFixed(2) + " %";
+      return (params.value * 10).toFixed(2) + " %";
     },
   },
 
   {
     headerName: "Post",
     field: "lastPost",
-    width: 200,
+    width: 400,
     align: "center",
     headerAlign: "center",
     sortable: false,
     renderCell: (params) => {
       return (
         <Link to={`/posts/${params.value?.id}`}>
-          <MDTypography variant="button" color="text">
+          <MDTypography
+            variant="button"
+            color="text"
+            sx={{
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: "3",
+              overflow: "hidden",
+            }}
+          >
             {params.value?.caption}
           </MDTypography>
         </Link>
