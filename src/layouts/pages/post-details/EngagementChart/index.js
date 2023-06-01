@@ -29,8 +29,8 @@ function EngagementChart({
   likesCount,
   owner,
   commentsCount,
-  videoPlayCount: videoPlays,
-  videoViewCount: videoViews,
+  videoPlayCount: videoPlays = 0,
+  videoViewCount: videoViews = 0,
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -66,15 +66,12 @@ function EngagementChart({
         px={2}
       >
         <MDBox position="relative">
-          <DefaultDoughnutChart chart={data1}/>
+          <DefaultDoughnutChart chart={data1} />
           <MDBox sx={{ position: "absolute", top: "140px", left: "110px" }}>
             <MDTypography textAlign="center" variant="h4">
               {(
-                ((likesCount + commentsCount + videoPlays ||
-                  0 + videoViews ||
-                  0) *
-                  100) /
-                (owner.followersCount || 1)
+                ((likesCount + commentsCount + videoPlays + videoViews)) /
+                (owner.followersCount || 1) * 100
               ).toFixed(2)}
               %
             </MDTypography>
