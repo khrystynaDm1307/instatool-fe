@@ -87,6 +87,7 @@ const autocomplete = {
       "& .MuiChip-label": {
         lineHeight: 1.2,
         padding: `0 ${pxToRem(10)} 0 ${pxToRem(4)}`,
+        color: white.main,
       },
 
       "& .MuiSvgIcon-root, & .MuiSvgIcon-root:hover, & .MuiSvgIcon-root:focus": {

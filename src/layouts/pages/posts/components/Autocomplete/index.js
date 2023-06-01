@@ -3,28 +3,19 @@ import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import ListSubheader from "@mui/material/ListSubheader";
 import { VariableSizeList } from "react-window";
-import { Chip } from "@mui/material";
+import { Chip, MenuItem, Typography } from "@mui/material";
+import { data } from "../../data";
 
 const LISTBOX_PADDING = 8; // px
-
-function renderRow({ data, index, style }) {
-  const item = data[index];
-
-  if (item.type === "group") {
-    return (
-      <ListSubheader component="div" style={style}>
-        {item.group}
-      </ListSubheader>
-    );
-  }
-
-  return <div style={style}>{item.label}</div>;
-}
 
 function VirtualizedAutocomplete({
   options,
   getOptionLabel,
   onChange,
+  setSelectedCountries,
+  setSelectedValues,
+  selectedCountries,
+  selectedValues,
   ...props
 }) {
   const [listboxWidth, setListboxWidth] = useState(0);
@@ -68,9 +59,6 @@ function VirtualizedAutocomplete({
   const OptionList = React.forwardRef((props, ref) => {
     const { children, ...listProps } = props;
     const totalHeight = getHeight();
-
-    const [selectedValues, setSelectedValues] = useState([]);
-    const [selectedCountries, setSelectedCountries] = useState([]);
 
     const handleSelect = (value) => {
       setSelectedValues((prevValues) => [...prevValues, value]);
@@ -117,7 +105,7 @@ function VirtualizedAutocomplete({
               return (
                 <ListSubheader
                   component="div"
-                  style={{ ...style, height: 48 }}
+                  style={{ ...style, height: 48, cursor: "pointer" }}
                   onClick={() => handleSelectCountry(item.group)}
                 >
                   {item.group}
@@ -133,7 +121,7 @@ function VirtualizedAutocomplete({
                     onDelete={() => handleDelete(item.label)}
                   />
                 ) : (
-                  item.label
+                  <MenuItem>{item.label}</MenuItem>
                 )}
               </div>
             );
@@ -142,6 +130,7 @@ function VirtualizedAutocomplete({
       </div>
     );
   });
+
   return (
     <Autocomplete
       ListboxComponent={OptionList}
@@ -157,11 +146,22 @@ function VirtualizedAutocomplete({
   );
 }
 
-export default function FilterComponent() {
-  const options = [
-    { country: "Ukraine", cities: ["Kyiv", "Lviv"] },
-    { country: "United States", cities: ["New York", "Los Angeles"] },
-  ];
+export default function FilterComponent({
+  setSelectedCountries,
+  setSelectedValues,
+  selectedCountries,
+  selectedValues
+}) {
+  // const options = [
+  //   { country: "Ukraine", cities: ["Kyiv", "Lviv"] },
+  //   { country: "United States", cities: ["New York", "Los Angeles"] },
+  // ];
+
+  const options = Object.entries(data)
+    .slice(0, 2)
+    .map(([country, cities]) => {
+      return { country, cities };
+    });
 
   const getOptionLabel = (option) => option.cities.join(", ");
 
@@ -171,10 +171,17 @@ export default function FilterComponent() {
 
   return (
     <div>
+      <Typography mb={1} variant="h6">
+        Location
+      </Typography>
       <VirtualizedAutocomplete
         options={options}
         getOptionLabel={getOptionLabel}
         onChange={handleSelect}
+        setSelectedCountries={setSelectedCountries}
+        setSelectedValues={setSelectedValues}
+        selectedCountries={selectedCountries}
+        selectedValues={selectedValues}
       />
     </div>
   );

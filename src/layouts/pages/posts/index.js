@@ -62,14 +62,22 @@ function Posts() {
   const { isLoading, data, mutate } = useMutation("posts", posts.getPosts);
   const [formValues, setFormValues] = useState({});
   const [sortValue, setSortValue] = useState(SORT_POSTS_VALUES[1].value);
+  const [selectedValues, setSelectedValues] = useState([]);
+  const [selectedCountries, setSelectedCountries] = useState([]);
 
   const handleSubmit = (values, handlers) => {
-    const params = { ...paginationModel, ...transformValues(values) };
+    const params = {
+      ...paginationModel,
+      ...transformValues({
+        ...values,
+        selectedLocations: [...selectedCountries, ...selectedValues],
+      }),
+    };
     setFormValues(params);
     handleMutate({ ...params, sort: sortValue });
     handlers?.setSubmitting(false);
   };
-console.log(data)
+
   const handleMutate = (params) =>
     mutate(params, { onError: (e) => setErr(true) });
 
@@ -93,7 +101,13 @@ console.log(data)
                     formData={formData}
                     submitBtnLabel="Find posts"
                   >
-                    <PostsForm formData={formData} />
+                    <PostsForm
+                      formData={formData}
+                      setSelectedCountries={setSelectedCountries}
+                      setSelectedValues={setSelectedValues}
+                      selectedCountries={selectedCountries}
+                      selectedValues={selectedValues}
+                    />
                   </MDForm>
                 </Form>
               )}

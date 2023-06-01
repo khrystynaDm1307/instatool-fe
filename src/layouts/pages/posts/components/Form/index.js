@@ -3,7 +3,13 @@ import FormField from "components/Form/FormField";
 import form from "../../schemas/form";
 import FilterComponent from "../Autocomplete";
 
-function PostsForm({ formData }) {
+function PostsForm({
+  formData,
+  setSelectedCountries,
+  setSelectedValues,
+  selectedCountries,
+  selectedValues,
+}) {
   const {
     likes,
     keywords,
@@ -51,8 +57,13 @@ function PostsForm({ formData }) {
           <FormField {...{ ...hashtags, formData }} />
         </Grid>
       </Grid>
-      <Grid item lg={12}>
-        <FilterComponent />
+      <Grid item lg={12} mt={3}>
+        <FilterComponent
+          setSelectedCountries={setSelectedCountries}
+          setSelectedValues={setSelectedValues}
+          selectedCountries={selectedCountries}
+          selectedValues={selectedValues}
+        />
       </Grid>
     </>
   );
