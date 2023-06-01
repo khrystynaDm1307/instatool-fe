@@ -28,19 +28,29 @@ import FormField from "layouts/pages/account/components/FormField";
 // Data
 import selectData from "layouts/pages/account/settings/components/BasicInfo/data/selectData";
 
-function InfluencerPostsForm() {
+function InfluencerPostsForm({ mentions }) {
   return (
     <Card id="basic-info" sx={{ overflow: "visible" }}>
       <MDBox p={3}>
-        <MDTypography variant="h5">Basic Info</MDTypography>
+        <MDTypography variant="h5">Filter posts</MDTypography>
       </MDBox>
       <MDBox component="form" pb={3} px={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <FormField label="First Name" placeholder="Alec" />
+            <Autocomplete
+              defaultValue="Male"
+              options={selectData.gender}
+              renderInput={(params) => (
+                <FormField
+                  {...params}
+                  label="Mentioned"
+                  InputLabelProps={{ shrink: true }}
+                />
+              )}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormField label="Last Name" placeholder="Thompson" />
+            <FormField label="Keywords" placeholder="Any..." />
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={3}>
@@ -49,7 +59,11 @@ function InfluencerPostsForm() {
                   defaultValue="Male"
                   options={selectData.gender}
                   renderInput={(params) => (
-                    <FormField {...params} label="I'm" InputLabelProps={{ shrink: true }} />
+                    <FormField
+                      {...params}
+                      label="Post type"
+                      InputLabelProps={{ shrink: true }}
+                    />
                   )}
                 />
               </Grid>
@@ -62,7 +76,7 @@ function InfluencerPostsForm() {
                       renderInput={(params) => (
                         <FormField
                           {...params}
-                          label="Birth Date"
+                          label="Post date"
                           InputLabelProps={{ shrink: true }}
                         />
                       )}
@@ -73,7 +87,10 @@ function InfluencerPostsForm() {
                       defaultValue="1"
                       options={selectData.days}
                       renderInput={(params) => (
-                        <FormField {...params} InputLabelProps={{ shrink: true }} />
+                        <FormField
+                          {...params}
+                          InputLabelProps={{ shrink: true }}
+                        />
                       )}
                     />
                   </Grid>
@@ -82,7 +99,10 @@ function InfluencerPostsForm() {
                       defaultValue="2021"
                       options={selectData.years}
                       renderInput={(params) => (
-                        <FormField {...params} InputLabelProps={{ shrink: true }} />
+                        <FormField
+                          {...params}
+                          InputLabelProps={{ shrink: true }}
+                        />
                       )}
                     />
                   </Grid>
@@ -91,38 +111,59 @@ function InfluencerPostsForm() {
             </Grid>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormField
-              label="Email"
-              placeholder="example@email.com"
-              inputProps={{ type: "email" }}
+            <Autocomplete
+              defaultValue="any"
+              options={selectData.gender}
+              renderInput={(params) => (
+                <FormField
+                  {...params}
+                  label="Likes"
+                  InputLabelProps={{ shrink: true }}
+                />
+              )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormField
-              label="confirmation email"
-              placeholder="example@email.com"
-              inputProps={{ type: "email" }}
+            <Autocomplete
+              defaultValue="any"
+              options={selectData.gender}
+              renderInput={(params) => (
+                <FormField
+                  {...params}
+                  label="Engagement"
+                  InputLabelProps={{ shrink: true }}
+                />
+              )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormField label="your location" placeholder="Sydney, A" />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormField
-              label="Phone Number"
-              placeholder="+40 735 631 620"
-              inputProps={{ type: "number" }}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <FormField label="Language" placeholder="English" />
-          </Grid>
-          <Grid item xs={12} md={6}>
             <Autocomplete
               multiple
               defaultValue={["react", "angular"]}
               options={selectData.skills}
-              renderInput={(params) => <FormField {...params} InputLabelProps={{ shrink: true }} />}
+              renderInput={(params) => (
+                <FormField
+                  {...params}
+                  InputLabelProps={{ shrink: true }}
+                  label={"Hashtags"}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Autocomplete
+              defaultValue="any"
+              options={selectData.gender}
+              renderInput={(params) => (
+                <FormField
+                  {...params}
+                  label="Language"
+                  InputLabelProps={{ shrink: true }}
+                />
+              )}
             />
           </Grid>
         </Grid>
