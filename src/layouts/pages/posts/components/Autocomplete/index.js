@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Checkbox from "@mui/material/Checkbox";
@@ -21,78 +21,73 @@ export default function FilterComponent({
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const fetchCities = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        "https://raw.githubusercontent.com/russ666/all-countries-and-cities-json/master/countries.json"
+      );
+      const data = await response.json();
+
+      const optionsData = Object.entries(data)
+        .slice(0, 10)
+        .flatMap(([country, cities]) => {
+          const newSet = new Set(cities);
+          const citiesWithCountry = Array.from(newSet).map((city) => ({
+            country,
+            city,
+            type: "city",
+          }));
+          return [{ country, type: "country" }, ...citiesWithCountry];
+        });
+
+      setOptions([...optionsData]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    setLoading(false);
+  }, []);
+
   useEffect(() => {
-    let active = true;
-
-    const fetchCities = async () => {
-      setLoading(true);
-
-      try {
-        const response = await fetch(
-          "https://raw.githubusercontent.com/russ666/all-countries-and-cities-json/master/countries.json"
-        );
-        const data = await response.json();
-
-        const optionsData = Object.entries(data)
-          .slice(0, 10)
-          .flatMap(([country, cities]) => {
-            const newSet = new Set(cities);
-            const citiesWithCountry = Array.from(newSet).map((city) => ({
-              country,
-              city,
-              type: "city",
-            }));
-            return [{ country, type: "country" }, ...citiesWithCountry];
-          });
-
-        if (active) {
-          setOptions([...optionsData]);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-
-      setLoading(false);
-    };
-
     if (open && options.length === 0) {
       fetchCities();
     }
+  }, [open, options.length, fetchCities]);
 
-    return () => {
-      active = false;
-    };
-  }, [open]);
-
-  const handleOptionClick = (option) => {
-    if (option.type === "country") {
-      const citiesInCountry = options.filter(
-        (o) => o.country === option.country && o.type === "city"
-      );
-      const allSelected = citiesInCountry.every((city) =>
-        selectedValues.includes(city)
-      );
-
-      if (allSelected) {
-        const newSelectedOptions = selectedValues.filter(
-          (o) => !citiesInCountry.includes(o)
+  const handleOptionClick = useCallback(
+    (option) => {
+      if (option.type === "country") {
+        const citiesInCountry = options.filter(
+          (o) => o.country === option.country && o.type === "city"
         );
-        setSelectedValues(() => newSelectedOptions);
-        setSelectedCountries(() =>
-          selectedCountries.filter((country) => country !== option.country)
+        const allSelected = citiesInCountry.every((city) =>
+          selectedValues.includes(city)
         );
+
+        if (allSelected) {
+          const newSelectedOptions = selectedValues.filter(
+            (o) => !citiesInCountry.includes(o)
+          );
+          setSelectedValues(newSelectedOptions);
+          setSelectedCountries((prev) =>
+            prev.filter((country) => country !== option.country)
+          );
+        } else {
+          const newSelectedOptions = [...selectedValues, ...citiesInCountry];
+          setSelectedValues(newSelectedOptions);
+          setSelectedCountries((prev) => [...prev, option.country]);
+        }
       } else {
-        const newSelectedOptions = [...selectedValues, ...citiesInCountry];
-        setSelectedValues(() => newSelectedOptions);
-        setSelectedCountries(() => [...selectedCountries, option.country]);
+        const newSelectedOptions = selectedValues.includes(option)
+          ? selectedValues.filter((o) => o !== option)
+          : [...selectedValues, option];
+        setSelectedValues(newSelectedOptions);
       }
-    } else {
-      const newSelectedOptions = selectedValues.includes(option)
-        ? selectedValues.filter((o) => o !== option)
-        : [...selectedValues, option];
-      setSelectedValues(() => newSelectedOptions);
-    }
-  };
+    },
+    [options, selectedValues, setSelectedValues, setSelectedCountries]
+  );
 
   return (
     <Box>
