@@ -125,7 +125,14 @@ const columns = [
     width: 400,
     sortable: false,
     valueGetter: (params) => {
-      return params.value?.map((men) => `@${men.username} `)?.join("");
+      const set = [
+        ...params.row.mentions.map((m) => m.username),
+        ...params.row.tagged_accounts.map((m) => m.username),
+      ];
+
+      return Array.from(new Set(set))
+        .map((men) => `@${men} `)
+        ?.join("");
     },
   },
   {

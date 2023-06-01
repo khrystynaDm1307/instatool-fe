@@ -16,7 +16,8 @@ const getRows = (post) => {
     url,
     shortCode,
     displayUrl,
-    videoUrl
+    videoUrl,
+    tagged_accounts
   } = post;
 
   const { email, followersCount } = owner;
@@ -26,6 +27,7 @@ const getRows = (post) => {
     user: owner,
     engagement,
     displayUrl,
+    tagged_accounts,
     videoUrl,
     shortCode,
     engagement_rate: (
