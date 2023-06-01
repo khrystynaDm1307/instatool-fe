@@ -30,56 +30,30 @@ import selectData from "layouts/pages/account/settings/components/BasicInfo/data
 import { ENGAGEMENT_VALUES } from "layouts/pages/influencers/schemas/values";
 import { LIKES_VALUES } from "layouts/pages/posts/schemas/values";
 import { LANGUAGES } from "assets/feeds/languages";
+import { getFilters } from "../helpers/getFilters";
+import MDButton from "components/MDButton";
 
-function InfluencerPostsForm({ posts }) {
-  let allMentions = [];
-  let allhashtags = [];
-  let allLocations = [];
-  let allTypes = [];
-  let allLangs = [];
+function InfluencerPostsForm({ posts, formik, filters, setFilters }) {
+  const { allMentions, allLocations, allhashtags, allTypes, allLangs } =
+    getFilters(posts);
 
-  posts.forEach((post) => {
-    const {
-      mentions,
-      hashtags,
-      locationName,
-      tagged_accounts,
-      type,
-      language,
-    } = post;
-    allMentions = [
-      ...allMentions,
-      ...mentions.map((m) => m.username),
-      ...tagged_accounts.map((m) => m.username),
-    ];
-
-    allhashtags = [...allhashtags, ...hashtags.map((m) => m.name)];
-
-    if (locationName) {
-      allLocations.push(locationName);
-    }
-
-    if (language) allLangs.push(language);
-
-    allTypes.push(type);
-  });
-
-  allMentions = Array.from(new Set(allMentions));
-  allhashtags = Array.from(new Set(allhashtags));
-  allLocations = Array.from(new Set(allLocations));
-  allTypes = Array.from(new Set(allTypes));
-  allLangs = Array.from(new Set(allLangs));
+  const handleFiltersChange = (value, name) => {
+    setFilters({ ...filters, [name]: value });
+  };
 
   return (
     <Card id="basic-info" sx={{ overflow: "visible" }}>
       <MDBox p={3}>
         <MDTypography variant="h5">Filter posts</MDTypography>
       </MDBox>
-      <MDBox component="form" pb={3} px={3}>
+      <MDBox component="form" pb={3} px={3} onSubmit={formik.handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <Autocomplete
               defaultValue={[]}
+              value={filters.mentions}
+              onChange={(e, value) => handleFiltersChange(value, "mentions")}
+              name="mentions"
               options={allMentions}
               multiple={true}
               renderInput={(params) => (
@@ -87,18 +61,31 @@ function InfluencerPostsForm({ posts }) {
                   {...params}
                   label="Mentioned"
                   InputLabelProps={{ shrink: true }}
+                  handleChange={(e, value) => {
+                    console.log(value);
+                  }}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormField label="Keywords" placeholder="Any..." />
+            <FormField
+              label="Keywords"
+              placeholder="Any..."
+              value={filters.keywords}
+              onChange={(e) => handleFiltersChange(e.target.value, "keywords")}
+              name="keywords"
+            />
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4}>
                 <Autocomplete
-                  defaultValue={[]}
+                  value={filters.postType}
+                  onChange={(e, value) =>
+                    handleFiltersChange(value, "postType")
+                  }
+                  name="postType"
                   options={allTypes}
                   multiple={true}
                   renderInput={(params) => (
@@ -155,7 +142,10 @@ function InfluencerPostsForm({ posts }) {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Autocomplete
-              defaultValue="any"
+              defaultValue="Any"
+              value={filters.likes}
+              onChange={(e, value) => handleFiltersChange(value, "likes")}
+              name="likes"
               options={LIKES_VALUES.map((e) => e.name)}
               renderInput={(params) => (
                 <FormField
@@ -168,8 +158,11 @@ function InfluencerPostsForm({ posts }) {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Autocomplete
-              defaultValue="any"
+              defaultValue="Any"
               options={ENGAGEMENT_VALUES.map((e) => e.name)}
+              value={filters.engagement}
+              onChange={(e, value) => handleFiltersChange(value, "engagement")}
+              name="engagement"
               renderInput={(params) => (
                 <FormField
                   {...params}
@@ -184,6 +177,9 @@ function InfluencerPostsForm({ posts }) {
               multiple
               defaultValue={[]}
               options={allLocations}
+              value={filters.locations}
+              onChange={(e, value) => handleFiltersChange(value, "locations")}
+              name="locations"
               renderInput={(params) => (
                 <FormField
                   {...params}
@@ -197,6 +193,9 @@ function InfluencerPostsForm({ posts }) {
             <Autocomplete
               multiple
               defaultValue={[]}
+              value={filters.hashtags}
+              onChange={(e, value) => handleFiltersChange(value, "hashtags")}
+              name="hashtags"
               options={allhashtags}
               renderInput={(params) => (
                 <FormField
@@ -211,6 +210,9 @@ function InfluencerPostsForm({ posts }) {
             <Autocomplete
               defaultValue={[]}
               multiple
+              value={filters.lang}
+              onChange={(e, value) => handleFiltersChange(value, "lang")}
+              name="lang"
               options={allLangs.map(
                 (lang) => LANGUAGES.find((l) => l.value === lang)?.name
               )}
@@ -224,6 +226,16 @@ function InfluencerPostsForm({ posts }) {
             />
           </Grid>
         </Grid>
+        <MDBox sx={{ width: "100%", display: "flex", justifyContent: "end" }}>
+          <MDButton
+            sx={{ mt: 2 }}
+            variant="outlined"
+            color="dark"
+            type="submit"
+          >
+            Filter
+          </MDButton>
+        </MDBox>
       </MDBox>
     </Card>
   );

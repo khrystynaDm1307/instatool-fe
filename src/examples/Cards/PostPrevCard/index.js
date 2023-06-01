@@ -183,9 +183,6 @@ PostPrevCard.defaultProps = {
 // Typechecking props for the DefaultProjectCard
 PostPrevCard.propTypes = {
   image: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
   action: PropTypes.shape({
     type: PropTypes.oneOf(["external", "internal"]),
     route: PropTypes.string.isRequired,

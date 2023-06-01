@@ -6,11 +6,9 @@ import EngagementChart from "./EngagementChart";
 import kal from "assets/images/kal-visuals-square.jpg";
 
 import ComplexProjectCard from "examples/Cards/ProjectCards/ComplexProjectCard";
-import { similarData } from "./data";
 import MDAvatar from "components/MDAvatar";
 import burceMars from "assets/images/bruce-mars.jpg";
 import { useQuery } from "react-query";
-import posts from "api/posts";
 import { useParams } from "react-router-dom";
 
 // @mui icons
@@ -24,13 +22,9 @@ import caloriesChartData from "../widgets/data/caloriesChartData";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import ProfileInfoCard from "examples/Cards/InfoCards/ProfileInfoCard";
-import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 
 // Images
 import homeDecor1 from "assets/images/home-decor-1.jpg";
-import homeDecor2 from "assets/images/home-decor-2.jpg";
-import homeDecor3 from "assets/images/home-decor-3.jpg";
-import homeDecor4 from "assets/images/home-decor-4.jpeg";
 import team1 from "assets/images/team-1.jpg";
 import team2 from "assets/images/team-2.jpg";
 import team3 from "assets/images/team-3.jpg";
@@ -38,13 +32,24 @@ import team4 from "assets/images/team-4.jpg";
 import InfluencerPostsForm from "./Form";
 import influencers from "api/influencers";
 import PostPrevCard from "examples/Cards/PostPrevCard";
+import { useFormik } from "formik";
+import { similarData } from "../post-details/data";
+import initialValues from "./shemas/initialValues";
+import { useState } from "react";
+import { LANGUAGES } from "assets/feeds/languages";
+import { LANGUAGE_VALUES } from "../influencers/schemas/values";
 
 function InfluencerDetails() {
   const params = useParams();
+  const [filteredPosts, setFilteredPosts] = useState();
 
   const { data, isLoading, error } = useQuery("influencer", async () =>
     influencers.getInfluencer(params.username)
   );
+
+  // let postsArr = data?.data?.influencer?.posts;
+
+  const [filters, setFilters] = useState(initialValues);
 
   const {
     ownerUsername,
@@ -61,7 +66,81 @@ function InfluencerDetails() {
     videoViews,
   } = data?.data?.influencer || {};
 
-  console.log({ data });
+  const formik = useFormik({
+    initialValues: initialValues,
+    onSubmit: (values) => {
+      const {
+        likes,
+        lang,
+        mentions,
+        keywords,
+        hashtags,
+        locations,
+        postType,
+        engagement,
+      } = filters;
+      let array = data?.data?.influencer?.posts;
+    
+      if (postType.length) {
+        array = array.filter((post) => postType.includes(post.type));
+      }
+    
+
+      if (engagement && engagement !== "Any") {
+        const rate = +engagement.split("")[1] / 100;
+        array = array.filter((post) => {
+          return post.eng_rate > rate;
+        });
+      }
+   
+      if (likes && likes !== "Any") {
+        const likesValue = likes.split(">")[1];
+        array = array.filter((post) => post.likesCount >= +likesValue);
+      }
+
+      if (lang.length) {
+        const iso_arr = lang.map(
+          (l) => LANGUAGE_VALUES.find((language) => language.name === l).value
+        );
+        array = array.filter((post) => iso_arr.includes(post.language));
+      }
+
+      if (mentions.length) {
+        array = array.filter((post) => {
+          return (
+            post.mentions.some((mention) =>
+              mentions.includes(mention.username)
+            ) ||
+            post.tagged_accounts.some((mention) =>
+              mentions.includes(mention.username)
+            )
+          );
+        });
+      }
+
+      if (hashtags.length) {
+        array = array.filter((post) => {
+          return post.hashtags.some((hashtag) =>
+            hashtags.includes(hashtag.name)
+          );
+        });
+      }
+      
+      if (locations.length) {
+        array = array.filter((post) => locations.includes(post.locationName));
+      }
+
+      if (keywords) {
+        array = array.filter((post) => post.caption.includes(keywords));
+      }
+
+      setFilteredPosts(array);
+    },
+  });
+
+  const postToDisplay = filteredPosts
+    ? filteredPosts
+    : data?.data?.influencer?.posts;
 
   return (
     <DashboardLayout>
@@ -269,16 +348,21 @@ function InfluencerDetails() {
             </Grid>
           </Box>
           <Box mt={6}>
-            <InfluencerPostsForm posts={posts} />
+            <InfluencerPostsForm
+              posts={posts}
+              formik={formik}
+              filters={filters}
+              setFilters={setFilters}
+            />
           </Box>
           <MDBox p={2} mt={6} mb={4}>
             <MDTypography variant="h6" mb={4}>
               Posts
             </MDTypography>
             <Grid container spacing={6}>
-              {posts?.map((post) => {
+              {postToDisplay?.map((post) => {
                 return (
-                  <Grid item xs={12} md={6} xl={3}>
+                  <Grid item xs={12} md={6} xl={3} key={post.shortCode}>
                     <PostPrevCard
                       image={homeDecor1}
                       mentions={[...post.mentions, ...post.tagged_accounts]}
