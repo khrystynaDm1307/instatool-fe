@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Checkbox from "@mui/material/Checkbox";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box, Typography } from "@mui/material";
+import { data } from "../../data";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -20,74 +21,125 @@ export default function FilterComponent({
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const fetchCities = useCallback(async () => {
-    setLoading(true);
-
-    try {
-      const response = await fetch(
-        "https://raw.githubusercontent.com/russ666/all-countries-and-cities-json/master/countries.json"
-      );
-      const data = await response.json();
-
-      const optionsData = Object.entries(data)
-        .slice(0, 10)
-        .flatMap(([country, cities]) => {
-          const newSet = new Set(cities);
-          const citiesWithCountry = Array.from(newSet).map((city) => ({
-            country,
-            city,
-            type: "city",
-          }));
-          return [{ country, type: "country" }, ...citiesWithCountry];
-        });
-
-      setOptions([...optionsData]);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-
-    setLoading(false);
-  }, []);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    if (open && options.length === 0) {
+    let active = true;
+
+    const fetchCities = async () => {
+      setLoading(true);
+      let filteredData = [];
+      try {
+        if (!searchQuery) {
+          filteredData = Object.entries(data)
+            .slice((page - 1) * 2, page * 2)
+            .flatMap(([country, cities]) => {
+              const newSet = new Set(cities);
+              const citiesWithCountry = Array.from(newSet).map((city) => ({
+                country,
+                city,
+                type: "city",
+              }));
+              return [{ country, type: "country" }, ...citiesWithCountry];
+            });
+        } else {
+          filteredData = Object.entries(data)
+            .filter(([country, cities]) => {
+              // Filter by search query
+              if (searchQuery) {
+                const lowercaseQuery = searchQuery.toLowerCase();
+                return (
+                  country.toLowerCase().includes(lowercaseQuery) ||
+                  cities.some((city) =>
+                    city.toLowerCase().includes(lowercaseQuery)
+                  )
+                );
+              }
+              return true;
+            })
+
+            .flatMap(([country, cities]) => {
+              const newSet = new Set(cities);
+
+              const citiesWithCountry = Array.from(newSet).map((city) => ({
+                country,
+                city,
+                type: "city",
+              }));
+              return [{ country, type: "country" }, ...citiesWithCountry];
+            })
+            .filter(({ country, city }) => {
+              const lowercaseQuery = searchQuery.toLowerCase();
+              if (country.toLowerCase().includes(lowercaseQuery)) return true;
+              return city?.toLowerCase().includes(lowercaseQuery);
+            });
+        }
+
+        const optionsData = searchQuery
+          ? filteredData.slice((page - 1) * 50, page * 50)
+          : filteredData;
+
+        if (active) {
+          if (page === 1) {
+            setOptions([...optionsData]);
+          } else {
+            setOptions((prevOptions) => [...prevOptions, ...optionsData]);
+          }
+          setHasMore(optionsData.length > 0);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+
+      setLoading(false);
+    };
+
+    if (open) {
       fetchCities();
     }
-  }, [open, options.length, fetchCities]);
 
-  const handleOptionClick = useCallback(
-    (option) => {
-      if (option.type === "country") {
-        const citiesInCountry = options.filter(
-          (o) => o.country === option.country && o.type === "city"
-        );
-        const allSelected = citiesInCountry.every((city) =>
-          selectedValues.includes(city)
-        );
+    return () => {
+      active = false;
+    };
+  }, [open, page, searchQuery]);
 
-        if (allSelected) {
-          const newSelectedOptions = selectedValues.filter(
-            (o) => !citiesInCountry.includes(o)
-          );
-          setSelectedValues(newSelectedOptions);
-          setSelectedCountries((prev) =>
-            prev.filter((country) => country !== option.country)
-          );
-        } else {
-          const newSelectedOptions = [...selectedValues, ...citiesInCountry];
-          setSelectedValues(newSelectedOptions);
-          setSelectedCountries((prev) => [...prev, option.country]);
-        }
+  const handleOptionClick = (option) => {
+    if (option.type === "country") {
+      const citiesInCountry = options.filter(
+        (o) => o.country === option.country && o.type === "city"
+      );
+      const allSelected = citiesInCountry.every((city) =>
+        selectedValues.includes(city)
+      );
+
+      if (allSelected) {
+        const newSelectedOptions = selectedValues.filter(
+          (o) => !citiesInCountry.includes(o)
+        );
+        setSelectedValues(() => newSelectedOptions);
+        setSelectedCountries(() =>
+          selectedCountries.filter((country) => country !== option.country)
+        );
       } else {
-        const newSelectedOptions = selectedValues.includes(option)
-          ? selectedValues.filter((o) => o !== option)
-          : [...selectedValues, option];
-        setSelectedValues(newSelectedOptions);
+        const newSelectedOptions = [...selectedValues, ...citiesInCountry];
+        setSelectedValues(() => newSelectedOptions);
+        setSelectedCountries(() => [...selectedCountries, option.country]);
       }
-    },
-    [options, selectedValues, setSelectedValues, setSelectedCountries]
-  );
+    } else {
+      const newSelectedOptions = selectedValues.includes(option)
+        ? selectedValues.filter((o) => o !== option)
+        : [...selectedValues, option];
+      setSelectedValues(() => newSelectedOptions);
+    }
+  };
+
+  const handleSearch = (event, value) => {
+    const query = value || event.target.value;
+    setSearchQuery(query);
+    setPage(1);
+  };
 
   return (
     <Box>
@@ -104,7 +156,9 @@ export default function FilterComponent({
           setOpen(false);
         }}
         groupBy={(option) => option.country}
-        isOptionEqualToValue={(option, value) => option === value}
+        isOptionEqualToValue={(option, value) => {
+          return option.country === value.country && option.city === value.city;
+        }}
         getOptionLabel={(option) => option.city || option.country}
         options={options}
         loading={loading}
@@ -149,6 +203,7 @@ export default function FilterComponent({
                 </React.Fragment>
               ),
             }}
+            onChange={handleSearch}
           />
         )}
       />

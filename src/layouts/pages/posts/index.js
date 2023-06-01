@@ -66,6 +66,7 @@ function Posts() {
   const [selectedCountries, setSelectedCountries] = useState([]);
 
   const handleSubmit = (values, handlers) => {
+  
     const cities = selectedValues.map((v) => v.city);
     const params = {
       ...paginationModel,
