@@ -38,6 +38,7 @@ import initialValues from "./shemas/initialValues";
 import { useState } from "react";
 import { LANGUAGES } from "assets/feeds/languages";
 import { LANGUAGE_VALUES } from "../influencers/schemas/values";
+import { filterPosts } from "./helpers/filterPosts";
 
 function InfluencerDetails() {
   const params = useParams();
@@ -68,71 +69,9 @@ function InfluencerDetails() {
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: (values) => {
-      const {
-        likes,
-        lang,
-        mentions,
-        keywords,
-        hashtags,
-        locations,
-        postType,
-        engagement,
-      } = filters;
-      let array = data?.data?.influencer?.posts;
-    
-      if (postType.length) {
-        array = array.filter((post) => postType.includes(post.type));
-      }
-    
-
-      if (engagement && engagement !== "Any") {
-        const rate = +engagement.split("")[1] / 100;
-        array = array.filter((post) => {
-          return post.eng_rate > rate;
-        });
-      }
-   
-      if (likes && likes !== "Any") {
-        const likesValue = likes.split(">")[1];
-        array = array.filter((post) => post.likesCount >= +likesValue);
-      }
-
-      if (lang.length) {
-        const iso_arr = lang.map(
-          (l) => LANGUAGE_VALUES.find((language) => language.name === l).value
-        );
-        array = array.filter((post) => iso_arr.includes(post.language));
-      }
-
-      if (mentions.length) {
-        array = array.filter((post) => {
-          return (
-            post.mentions.some((mention) =>
-              mentions.includes(mention.username)
-            ) ||
-            post.tagged_accounts.some((mention) =>
-              mentions.includes(mention.username)
-            )
-          );
-        });
-      }
-
-      if (hashtags.length) {
-        array = array.filter((post) => {
-          return post.hashtags.some((hashtag) =>
-            hashtags.includes(hashtag.name)
-          );
-        });
-      }
-      
-      if (locations.length) {
-        array = array.filter((post) => locations.includes(post.locationName));
-      }
-
-      if (keywords) {
-        array = array.filter((post) => post.caption.includes(keywords));
-      }
+    onSubmit: () => {
+      console.log(filters)
+      let array = filterPosts(data?.data?.influencer?.posts, filters);
 
       setFilteredPosts(array);
     },

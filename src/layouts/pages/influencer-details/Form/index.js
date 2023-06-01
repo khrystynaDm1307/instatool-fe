@@ -103,6 +103,11 @@ function InfluencerPostsForm({ posts, formik, filters, setFilters }) {
                     <Autocomplete
                       defaultValue="February"
                       options={selectData.birthDate}
+                      value={filters.month}
+                      onChange={(e, value) =>
+                        handleFiltersChange(value, "month")
+                      }
+                      name="month"
                       renderInput={(params) => (
                         <FormField
                           {...params}
@@ -116,6 +121,9 @@ function InfluencerPostsForm({ posts, formik, filters, setFilters }) {
                     <Autocomplete
                       defaultValue="1"
                       options={selectData.days}
+                      value={filters.day}
+                      onChange={(e, value) => handleFiltersChange(value, "day")}
+                      name="day"
                       renderInput={(params) => (
                         <FormField
                           {...params}
@@ -126,8 +134,13 @@ function InfluencerPostsForm({ posts, formik, filters, setFilters }) {
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <Autocomplete
-                      defaultValue="2023"
+                      defaultValue="2000"
                       options={selectData.years}
+                      value={filters.year}
+                      onChange={(e, value) =>
+                        handleFiltersChange(value, "year")
+                      }
+                      name="year"
                       renderInput={(params) => (
                         <FormField
                           {...params}
