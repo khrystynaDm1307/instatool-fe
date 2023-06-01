@@ -64,9 +64,8 @@ function Posts() {
   const [sortValue, setSortValue] = useState(SORT_POSTS_VALUES[1].value);
   const [selectedValues, setSelectedValues] = useState([]);
   const [selectedCountries, setSelectedCountries] = useState([]);
-
+ 
   const handleSubmit = (values, handlers) => {
-  
     const cities = selectedValues.map((v) => v.city);
     const params = {
       ...paginationModel,

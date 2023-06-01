@@ -164,7 +164,7 @@ export default function FilterComponent({
         loading={loading}
         multiple={true}
         value={selectedValues}
-        onChange={(event, value) => console.log(value)}
+        onChange={(event, value) => setSelectedValues(value)}
         renderOption={(props, option) => {
           if (option.type === "country") {
             const citiesInCountry = options.filter(
