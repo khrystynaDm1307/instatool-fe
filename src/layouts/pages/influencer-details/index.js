@@ -6,7 +6,7 @@ import EngagementChart from "./EngagementChart";
 import kal from "assets/images/kal-visuals-square.jpg";
 
 import ComplexProjectCard from "examples/Cards/ProjectCards/ComplexProjectCard";
-import { sentiment, similarData } from "./data";
+import { similarData } from "./data";
 import MDAvatar from "components/MDAvatar";
 import burceMars from "assets/images/bruce-mars.jpg";
 import { useQuery } from "react-query";
@@ -36,30 +36,30 @@ import team2 from "assets/images/team-2.jpg";
 import team3 from "assets/images/team-3.jpg";
 import team4 from "assets/images/team-4.jpg";
 import InfluencerPostsForm from "./Form";
+import influencers from "api/influencers";
 
 function InfluencerDetails() {
   const params = useParams();
 
-  const { data, isLoading, error } = useQuery("post-id", async () =>
-    posts.getPostById(params.username)
+  const { data, isLoading, error } = useQuery("influencer", async () =>
+    influencers.getInfluencer(params.username)
   );
 
   const {
-    caption,
-    type,
-    location,
-    timestamp,
-    owner,
-    hashtags,
-    mentions,
-    likesCount,
-    commentsCount,
-    videoViewCount: videoViews,
-    videoPlayCount: videoPlays,
-    tagged_accounts,
-  } = data?.data?.post || {};
-  const { ownerUsername, ownerFullName, biography, email, followersCount } =
-    owner || {};
+    ownerUsername,
+    ownerFullName,
+    biography,
+    email,
+    followersCount,
+    followsCount,
+    postsCount,
+    posts,
+    totalComments,
+    totalLikes,
+    videoPlays,
+    videoViews,
+  } = data?.data?.influencer || {};
+
   console.log({ data });
 
   return (
@@ -80,7 +80,7 @@ function InfluencerDetails() {
           <CircularProgress />
         </Box>
       )}
-      {data && data?.data?.post === null && (
+      {data && data?.data?.influencer === null && (
         <Box
           sx={{
             width: "100%",
@@ -92,10 +92,10 @@ function InfluencerDetails() {
             alignItems: "center",
           }}
         >
-          No post found
+          No influencer found
         </Box>
       )}
-      {!isLoading && !error && data?.data?.post && (
+      {!isLoading && !error && data?.data?.influencer && (
         <Card sx={{ py: 3, px: 6 }}>
           <Typography variant="h4" mb={8}>
             Influencer
@@ -129,19 +129,19 @@ function InfluencerDetails() {
               <Box>
                 <ProfileInfoCard
                   title="Biography"
-                  description="Hi, I’m Alec Thompson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
+                  description={biography}
                   info={{
-                    fullName: "Alec M. Thompson",
+                    fullName: ownerFullName,
                     mobile: "(44) 123 1234 123",
-                    email: "alecthompson@mail.com",
+                    email: email || "-",
                     location: "USA",
                   }}
                   shadow={false}
                   data={[
-                    { label: "Posts", value: 12 },
+                    { label: "Posts", value: postsCount },
                     { label: "Reels", value: 12 },
-                    { label: "Followers", value: 12 },
-                    { label: "Followings", value: 12 },
+                    { label: "Followers", value: followersCount },
+                    { label: "Followings", value: followsCount },
                   ]}
                   social={[
                     {
@@ -189,7 +189,7 @@ function InfluencerDetails() {
                       icon="weekend"
                       title="Likes"
                       color="dark"
-                      count={likesCount === -1 ? "-" : likesCount || "-"}
+                      count={totalLikes}
                       percentage={{
                         color: "success",
                         amount: "+55%",
@@ -204,7 +204,7 @@ function InfluencerDetails() {
                       icon="leaderboard"
                       title="Comments"
                       color="dark"
-                      count={commentsCount === -1 ? "-" : commentsCount || "-"}
+                      count={totalComments}
                       percentage={{
                         color: "success",
                         amount: "+3%",
@@ -239,7 +239,15 @@ function InfluencerDetails() {
                 )}
               </Grid>
               <Box>
-                <EngagementChart {...(data?.data?.post || {})} />
+                <EngagementChart
+                  {...({
+                    likesCount: totalLikes,
+                    commentsCount: totalComments,
+                    videoPlayCount: videoPlays,
+                    videoViewCount: videoViews,
+                    owner:{followersCount}
+                  } || {})}
+                />
               </Box>
             </Grid>
           </Grid>
@@ -260,7 +268,7 @@ function InfluencerDetails() {
             </Grid>
           </Box>
           <Box mt={6}>
-            <InfluencerPostsForm/>
+            <InfluencerPostsForm />
           </Box>
           <MDBox p={2} mt={6} mb={4}>
             <MDTypography variant="h6" mb={4}>

@@ -15,26 +15,15 @@ Coded by www.creative-tim.com
 
 // @mui material components
 import Card from "@mui/material/Card";
-import Tooltip from "@mui/material/Tooltip";
-import Icon from "@mui/material/Icon";
-import Grid from "@mui/material/Grid";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import MDButton from "components/MDButton";
 import MDBadgeDot from "components/MDBadgeDot";
-import PieChart from "examples/Charts/PieChart";
-
-// Data
-import channelChartData from "layouts/dashboards/sales/components/ChannelsChart/data";
 
 // Material Dashboard 2 PRO React contexts
 import { useMaterialUIController } from "context";
 import DefaultDoughnutChart from "examples/Charts/DoughnutCharts/DefaultDoughnutChart";
-import defaultDoughnutChartData from "layouts/pages/charts/data/defaultDoughnutChartData";
-import { Doughnut } from "react-chartjs-2";
-import configs from "examples/Charts/DoughnutCharts/DefaultDoughnutChart/configs";
 
 function EngagementChart({
   likesCount,
@@ -81,11 +70,8 @@ function EngagementChart({
           <MDBox sx={{ position: "absolute", top: "140px", left: "110px" }}>
             <MDTypography textAlign="center" variant="h4">
               {(
-                ((likesCount + commentsCount + videoPlays ||
-                  0 + videoViews ||
-                  0) *
-                  100) /
-                (owner.followersCount || 1)
+                (likesCount + commentsCount + videoPlays + videoViews) /
+                (owner.followersCount || 1) * 100
               ).toFixed(2)}
               %
             </MDTypography>

@@ -36,7 +36,7 @@ const columns = [
     headerAlign: "center",
     sortable: false,
     valueGetter: (params) => {
-      return (params.value * 10).toFixed(2) + " %";
+      return ((params.value / 1000) * 100).toFixed(2) + " %";
     },
   },
 
