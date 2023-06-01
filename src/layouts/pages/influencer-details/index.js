@@ -269,7 +269,7 @@ function InfluencerDetails() {
             </Grid>
           </Box>
           <Box mt={6}>
-            <InfluencerPostsForm />
+            <InfluencerPostsForm posts={posts} />
           </Box>
           <MDBox p={2} mt={6} mb={4}>
             <MDTypography variant="h6" mb={4}>

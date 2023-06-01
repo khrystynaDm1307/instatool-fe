@@ -27,8 +27,49 @@ import FormField from "layouts/pages/account/components/FormField";
 
 // Data
 import selectData from "layouts/pages/account/settings/components/BasicInfo/data/selectData";
+import { ENGAGEMENT_VALUES } from "layouts/pages/influencers/schemas/values";
+import { LIKES_VALUES } from "layouts/pages/posts/schemas/values";
+import { LANGUAGES } from "assets/feeds/languages";
 
-function InfluencerPostsForm({ mentions }) {
+function InfluencerPostsForm({ posts }) {
+  let allMentions = [];
+  let allhashtags = [];
+  let allLocations = [];
+  let allTypes = [];
+  let allLangs = [];
+
+  posts.forEach((post) => {
+    const {
+      mentions,
+      hashtags,
+      locationName,
+      tagged_accounts,
+      type,
+      language,
+    } = post;
+    allMentions = [
+      ...allMentions,
+      ...mentions.map((m) => m.username),
+      ...tagged_accounts.map((m) => m.username),
+    ];
+
+    allhashtags = [...allhashtags, ...hashtags.map((m) => m.name)];
+
+    if (locationName) {
+      allLocations.push(locationName);
+    }
+
+    if (language) allLangs.push(language);
+
+    allTypes.push(type);
+  });
+
+  allMentions = Array.from(new Set(allMentions));
+  allhashtags = Array.from(new Set(allhashtags));
+  allLocations = Array.from(new Set(allLocations));
+  allTypes = Array.from(new Set(allTypes));
+  allLangs = Array.from(new Set(allLangs));
+
   return (
     <Card id="basic-info" sx={{ overflow: "visible" }}>
       <MDBox p={3}>
@@ -38,8 +79,9 @@ function InfluencerPostsForm({ mentions }) {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <Autocomplete
-              defaultValue="Male"
-              options={selectData.gender}
+              defaultValue={[]}
+              options={allMentions}
+              multiple={true}
               renderInput={(params) => (
                 <FormField
                   {...params}
@@ -56,8 +98,9 @@ function InfluencerPostsForm({ mentions }) {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4}>
                 <Autocomplete
-                  defaultValue="Male"
-                  options={selectData.gender}
+                  defaultValue={[]}
+                  options={allTypes}
+                  multiple={true}
                   renderInput={(params) => (
                     <FormField
                       {...params}
@@ -96,7 +139,7 @@ function InfluencerPostsForm({ mentions }) {
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <Autocomplete
-                      defaultValue="2021"
+                      defaultValue="2023"
                       options={selectData.years}
                       renderInput={(params) => (
                         <FormField
@@ -113,7 +156,7 @@ function InfluencerPostsForm({ mentions }) {
           <Grid item xs={12} sm={6}>
             <Autocomplete
               defaultValue="any"
-              options={selectData.gender}
+              options={LIKES_VALUES.map((e) => e.name)}
               renderInput={(params) => (
                 <FormField
                   {...params}
@@ -126,7 +169,7 @@ function InfluencerPostsForm({ mentions }) {
           <Grid item xs={12} sm={6}>
             <Autocomplete
               defaultValue="any"
-              options={selectData.gender}
+              options={ENGAGEMENT_VALUES.map((e) => e.name)}
               renderInput={(params) => (
                 <FormField
                   {...params}
@@ -137,13 +180,24 @@ function InfluencerPostsForm({ mentions }) {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormField label="your location" placeholder="Sydney, A" />
+            <Autocomplete
+              multiple
+              defaultValue={[]}
+              options={allLocations}
+              renderInput={(params) => (
+                <FormField
+                  {...params}
+                  InputLabelProps={{ shrink: true }}
+                  label={"Location"}
+                />
+              )}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Autocomplete
               multiple
-              defaultValue={["react", "angular"]}
-              options={selectData.skills}
+              defaultValue={[]}
+              options={allhashtags}
               renderInput={(params) => (
                 <FormField
                   {...params}
@@ -155,8 +209,11 @@ function InfluencerPostsForm({ mentions }) {
           </Grid>
           <Grid item xs={12} md={6}>
             <Autocomplete
-              defaultValue="any"
-              options={selectData.gender}
+              defaultValue={[]}
+              multiple
+              options={allLangs.map(
+                (lang) => LANGUAGES.find((l) => l.value === lang)?.name
+              )}
               renderInput={(params) => (
                 <FormField
                   {...params}
