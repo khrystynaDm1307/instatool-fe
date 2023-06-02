@@ -507,17 +507,6 @@ function DefaultNavbar({ routes, brand, transparent, light, action }) {
         })}
       >
         <MDBox display="flex" justifyContent="space-between" alignItems="center">
-          <MDBox
-            component={Link}
-            to="/"
-            py={transparent ? 1.5 : 0.75}
-            lineHeight={1}
-            pl={{ xs: 0, lg: 1 }}
-          >
-            <MDTypography variant="button" fontWeight="bold" color={light ? "white" : "dark"}>
-              {brand}
-            </MDTypography>
-          </MDBox>
           <MDBox color="inherit" display={{ xs: "none", lg: "flex" }} m={0} p={0}>
             {renderNavbarItems}
           </MDBox>

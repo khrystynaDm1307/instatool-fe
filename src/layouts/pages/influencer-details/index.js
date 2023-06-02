@@ -35,22 +35,24 @@ import PostPrevCard from "examples/Cards/PostPrevCard";
 import { useFormik } from "formik";
 import { similarData } from "../post-details/data";
 import initialValues from "./shemas/initialValues";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LANGUAGES } from "assets/feeds/languages";
 import { LANGUAGE_VALUES } from "../influencers/schemas/values";
 import { filterPosts } from "./helpers/filterPosts";
+import DefaultNavbarDropdown from "examples/Navbars/DefaultNavbar/DefaultNavbarDropdown";
+import SortNavbar from "./SortNavbar";
+import BasicSortMenu from "./SortNavbar";
+import { sortPosts } from "./helpers/sortPosts";
 
 function InfluencerDetails() {
   const params = useParams();
   const [filteredPosts, setFilteredPosts] = useState();
+  const [filters, setFilters] = useState(initialValues);
+  const [sort, setSort] = useState();
 
   const { data, isLoading, error } = useQuery("influencer", async () =>
     influencers.getInfluencer(params.username)
   );
-
-  // let postsArr = data?.data?.influencer?.posts;
-
-  const [filters, setFilters] = useState(initialValues);
 
   const {
     ownerUsername,
@@ -70,16 +72,19 @@ function InfluencerDetails() {
   const formik = useFormik({
     initialValues: initialValues,
     onSubmit: () => {
-      console.log(filters)
       let array = filterPosts(data?.data?.influencer?.posts, filters);
 
       setFilteredPosts(array);
     },
   });
 
-  const postToDisplay = filteredPosts
+  let postToDisplay = filteredPosts
     ? filteredPosts
     : data?.data?.influencer?.posts;
+
+  useEffect(() => {
+    postToDisplay = sortPosts(postToDisplay, sort);
+  }, [sort, postToDisplay]);
 
   return (
     <DashboardLayout>
@@ -295,9 +300,28 @@ function InfluencerDetails() {
             />
           </Box>
           <MDBox p={2} mt={6} mb={4}>
-            <MDTypography variant="h6" mb={4}>
-              Posts
-            </MDTypography>
+            <Box display="flex" alignItems="center" mb={3}>
+              <MDTypography variant="h6" mr={10}>
+                Posts
+              </MDTypography>
+              <Box display="flex">
+                <BasicSortMenu name="Likes" sort={sort} setSort={setSort} />
+                <BasicSortMenu name="Comments" sort={sort} setSort={setSort} />
+                <BasicSortMenu name="Plays" sort={sort} setSort={setSort} />
+                <BasicSortMenu name="Views" sort={sort} setSort={setSort} />
+                <BasicSortMenu
+                  name="Engagement"
+                  sort={sort}
+                  setSort={setSort}
+                />
+                <BasicSortMenu
+                  name="Engagement rate"
+                  sort={sort}
+                  setSort={setSort}
+                />
+              </Box>
+            </Box>
+
             <Grid container spacing={6}>
               {postToDisplay?.map((post) => {
                 return (
