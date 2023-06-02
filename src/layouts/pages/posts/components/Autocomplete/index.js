@@ -51,9 +51,9 @@ export default function FilterComponent({
               if (searchQuery) {
                 const lowercaseQuery = searchQuery.toLowerCase();
                 return (
-                  country.toLowerCase().includes(lowercaseQuery) ||
+                  country.toLowerCase().startsWith(lowercaseQuery) ||
                   cities.some((city) =>
-                    city.toLowerCase().includes(lowercaseQuery)
+                    city.toLowerCase().startsWith(lowercaseQuery)
                   )
                 );
               }
@@ -72,8 +72,8 @@ export default function FilterComponent({
             })
             .filter(({ country, city }) => {
               const lowercaseQuery = searchQuery.toLowerCase();
-              if (country.toLowerCase().includes(lowercaseQuery)) return true;
-              return city?.toLowerCase().includes(lowercaseQuery);
+              if (country.toLowerCase().startsWith(lowercaseQuery)) return true;
+              return city?.toLowerCase().startsWith(lowercaseQuery);
             });
         }
 
