@@ -34,7 +34,7 @@ export default function FilterComponent({
       try {
         if (!searchQuery) {
           filteredData = Object.entries(data)
-            .slice((page - 1) * 2, page * 2)
+            .slice((page - 1) * 5, page * 5)
             .flatMap(([country, cities]) => {
               const newSet = new Set(cities);
               const citiesWithCountry = Array.from(newSet).map((city) => ({
@@ -76,6 +76,8 @@ export default function FilterComponent({
               return city?.toLowerCase().includes(lowercaseQuery);
             });
         }
+
+        console.log(filteredData.length);
 
         const optionsData = searchQuery
           ? filteredData.slice((page - 1) * 50, page * 50)
@@ -132,7 +134,7 @@ export default function FilterComponent({
         ? selectedValues.filter((o) => o !== option)
         : [...selectedValues, option];
 
-        setSelectedCountries(() =>
+      setSelectedCountries(() =>
         selectedCountries.filter((country) =>
           newSelectedOptions.some((o) => o.country === country)
         )
@@ -146,6 +148,10 @@ export default function FilterComponent({
     const query = value || event.target.value;
     setSearchQuery(query);
     setPage(1);
+  };
+
+  const handleLoadMore = () => {
+    setPage((prevPage) => prevPage + 1);
   };
 
   return (
@@ -167,7 +173,10 @@ export default function FilterComponent({
           return option.country === value.country && option.city === value.city;
         }}
         getOptionLabel={(option) => option.city || option.country}
-        options={options}
+        options={[
+          ...options,
+          { label: "Load more", type: "button", country: "", city: "" },
+        ]}
         loading={loading}
         multiple={true}
         value={selectedValues}
@@ -195,7 +204,8 @@ export default function FilterComponent({
                 All cities
               </li>
             );
-          } else {
+          }
+          if (option.type === "city") {
             return (
               <li {...props} onClick={() => handleOptionClick(option)}>
                 <Checkbox checked={selectedValues.includes(option)} />
@@ -203,6 +213,24 @@ export default function FilterComponent({
               </li>
             );
           }
+
+          if (
+            option.type === "button" &&
+            hasMore &&
+            options.length > 0 &&
+            !loading
+          )
+            return (
+              <Typography
+                variant="h6"
+                p={2}
+                pb={0}
+                sx={{ ":hover": { cursor: "pointer" } }}
+                onClick={handleLoadMore}
+              >
+                {option.label}
+              </Typography>
+            );
         }}
         renderInput={(params) => (
           <TextField
