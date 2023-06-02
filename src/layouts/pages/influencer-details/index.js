@@ -128,72 +128,86 @@ function InfluencerDetails() {
 
           <Grid container spacing={6}>
             <Grid item lg={5} md={12}>
-              <Box>
-                <MDBox display="flex" alignItems="center" mb={3}>
-                  <MDAvatar
-                    src={burceMars}
-                    alt="profile-image"
-                    size="xl"
-                    shadow="sm"
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  height: "100%",
+                }}
+              >
+                <Box>
+                  <Box>
+                    <MDBox display="flex" alignItems="center" mb={3}>
+                      <MDAvatar
+                        src={burceMars}
+                        alt="profile-image"
+                        size="xl"
+                        shadow="sm"
+                      />
+                      <MDBox height="100%" mt={0.5} lineHeight={1} ml={3}>
+                        <MDTypography variant="h5" fontWeight="medium">
+                          {ownerFullName || ownerUsername}
+                        </MDTypography>
+                        <MDTypography
+                          variant="button"
+                          color="text"
+                          fontWeight="regular"
+                        >
+                          {ownerFullName
+                            ? `@${ownerUsername}`
+                            : "CEO / Co-Founder"}
+                        </MDTypography>
+                      </MDBox>
+                    </MDBox>
+                  </Box>
+
+                  <Box>
+                    <ProfileInfoCard
+                      title="Biography"
+                      description={biography}
+                      info={{
+                        fullName: ownerFullName,
+                        mobile: "(44) 123 1234 123",
+                        email: email || "-",
+                        location: "USA",
+                      }}
+                      shadow={false}
+                      data={[
+                        { label: "Posts", value: postsCount },
+                        { label: "Reels", value: 12 },
+                        { label: "Followers", value: followersCount },
+                        { label: "Followings", value: followsCount },
+                      ]}
+                      social={[
+                        {
+                          link: "https://www.facebook.com/CreativeTim/",
+                          icon: <FacebookIcon />,
+                          color: "facebook",
+                        },
+                        {
+                          link: "https://twitter.com/creativetim",
+                          icon: <TwitterIcon />,
+                          color: "twitter",
+                        },
+                        {
+                          link: "https://www.instagram.com/creativetimofficial/",
+                          icon: <InstagramIcon />,
+                          color: "instagram",
+                        },
+                      ]}
+                    />
+                  </Box>
+                </Box>
+                <Box>
+                  <Chart
+                    title="Engagement growth last 3 months"
+                    count={97}
+                    percentage={{ color: "success", label: "+5%" }}
+                    chart={caloriesChartData}
                   />
-                  <MDBox height="100%" mt={0.5} lineHeight={1} ml={3}>
-                    <MDTypography variant="h5" fontWeight="medium">
-                      {ownerFullName || ownerUsername}
-                    </MDTypography>
-                    <MDTypography
-                      variant="button"
-                      color="text"
-                      fontWeight="regular"
-                    >
-                      {ownerFullName ? `@${ownerUsername}` : "CEO / Co-Founder"}
-                    </MDTypography>
-                  </MDBox>
-                </MDBox>
+                </Box>
               </Box>
-
-              <Box>
-                <ProfileInfoCard
-                  title="Biography"
-                  description={biography}
-                  info={{
-                    fullName: ownerFullName,
-                    mobile: "(44) 123 1234 123",
-                    email: email || "-",
-                    location: "USA",
-                  }}
-                  shadow={false}
-                  data={[
-                    { label: "Posts", value: postsCount },
-                    { label: "Reels", value: 12 },
-                    { label: "Followers", value: followersCount },
-                    { label: "Followings", value: followsCount },
-                  ]}
-                  social={[
-                    {
-                      link: "https://www.facebook.com/CreativeTim/",
-                      icon: <FacebookIcon />,
-                      color: "facebook",
-                    },
-                    {
-                      link: "https://twitter.com/creativetim",
-                      icon: <TwitterIcon />,
-                      color: "twitter",
-                    },
-                    {
-                      link: "https://www.instagram.com/creativetimofficial/",
-                      icon: <InstagramIcon />,
-                      color: "instagram",
-                    },
-                  ]}
-                />
-              </Box>
-
-              <Chart
-                title="Engagement growth last 3 months"
-                count={97}
-                percentage={{ color: "success", label: "+5%" }}
-                chart={caloriesChartData}
-              />
             </Grid>
 
             <Grid item lg={7} md={12}>

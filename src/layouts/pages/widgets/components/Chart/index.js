@@ -76,7 +76,7 @@ function Chart({ title, count, percentage, chart }) {
       </MDBox>
       {useMemo(
         () => (
-          <MDBox ref={chartRef} sx={{ height: "5.375rem" }}>
+          <MDBox ref={chartRef}>
             <Line data={data} options={options} />
           </MDBox>
         ),
