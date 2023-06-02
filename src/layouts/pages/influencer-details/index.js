@@ -325,7 +325,11 @@ function InfluencerDetails() {
                 })}
               </Box>
             </Box>
-
+            {postToDisplay.length === 0 && (
+              <MDTypography sx={{ textAlign: "center", pt: 6, pb: 6 }}>
+                No posts ...
+              </MDTypography>
+            )}
             <Grid container spacing={6}>
               {!loading &&
                 postToDisplay?.map((post) => {
