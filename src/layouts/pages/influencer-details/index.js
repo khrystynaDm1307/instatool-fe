@@ -49,6 +49,7 @@ function InfluencerDetails() {
   const [filteredPosts, setFilteredPosts] = useState();
   const [filters, setFilters] = useState(initialValues);
   const [sort, setSort] = useState();
+  const [loading, setLoading] = useState(false);
 
   const { data, isLoading, error } = useQuery("influencer", async () =>
     influencers.getInfluencer(params.username)
@@ -83,7 +84,7 @@ function InfluencerDetails() {
     : data?.data?.influencer?.posts;
 
   useEffect(() => {
-    postToDisplay = sortPosts(postToDisplay, sort);
+    postToDisplay = sortPosts(postToDisplay, sort, setLoading);
   }, [sort, postToDisplay]);
 
   return (
@@ -300,60 +301,64 @@ function InfluencerDetails() {
             />
           </Box>
           <MDBox p={2} mt={6} mb={4}>
-            <Box display="flex" alignItems="center" mb={3}>
+            <Box display="flex" alignItems="center" mb={3} flexWrap="wrap">
               <MDTypography variant="h6" mr={10}>
                 Posts
               </MDTypography>
-              <Box display="flex">
-                <BasicSortMenu name="Likes" sort={sort} setSort={setSort} />
-                <BasicSortMenu name="Comments" sort={sort} setSort={setSort} />
-                <BasicSortMenu name="Plays" sort={sort} setSort={setSort} />
-                <BasicSortMenu name="Views" sort={sort} setSort={setSort} />
-                <BasicSortMenu
-                  name="Engagement"
-                  sort={sort}
-                  setSort={setSort}
-                />
-                <BasicSortMenu
-                  name="Engagement rate"
-                  sort={sort}
-                  setSort={setSort}
-                />
+              <Box display="flex" flexWrap="wrap">
+                {[
+                  "Likes",
+                  "Comments",
+                  "Plays",
+                  "Views",
+                  "Engagement",
+                  "Engagement rate",
+                ].map((name) => {
+                  return (
+                    <BasicSortMenu
+                      key={name}
+                      name={name}
+                      sort={sort}
+                      setSort={setSort}
+                    />
+                  );
+                })}
               </Box>
             </Box>
 
             <Grid container spacing={6}>
-              {postToDisplay?.map((post) => {
-                return (
-                  <Grid item xs={12} md={6} xl={3} key={post.shortCode}>
-                    <PostPrevCard
-                      image={homeDecor1}
-                      mentions={[...post.mentions, ...post.tagged_accounts]}
-                      hashtags={post.hashtags}
-                      metrics={[
-                        { label: "Likes", value: post.likesCount },
-                        { label: "Comments", value: post.commentsCount },
-                        {
-                          label: "Eng.rate",
-                          value: `${(post.eng_rate * 100).toFixed(1)}%`,
-                        },
-                      ]}
-                      action={{
-                        type: "internal",
-                        route: `/posts/${post.id}`,
-                        color: "dark",
-                        label: "view post",
-                      }}
-                      authors={[
-                        { image: team1, name: "Elena Morison" },
-                        { image: team2, name: "Ryan Milly" },
-                        { image: team3, name: "Nick Daniel" },
-                        { image: team4, name: "Peterson" },
-                      ]}
-                    />
-                  </Grid>
-                );
-              })}
+              {!loading &&
+                postToDisplay?.map((post) => {
+                  return (
+                    <Grid item xs={12} md={6} xl={3} key={post.shortCode}>
+                      <PostPrevCard
+                        image={homeDecor1}
+                        mentions={[...post.mentions, ...post.tagged_accounts]}
+                        hashtags={post.hashtags}
+                        metrics={[
+                          { label: "Likes", value: post.likesCount },
+                          { label: "Comments", value: post.commentsCount },
+                          {
+                            label: "Eng.rate",
+                            value: `${(post.eng_rate * 100).toFixed(1)}%`,
+                          },
+                        ]}
+                        action={{
+                          type: "internal",
+                          route: `/posts/${post.id}`,
+                          color: "dark",
+                          label: "view post",
+                        }}
+                        authors={[
+                          { image: team1, name: "Elena Morison" },
+                          { image: team2, name: "Ryan Milly" },
+                          { image: team3, name: "Nick Daniel" },
+                          { image: team4, name: "Peterson" },
+                        ]}
+                      />
+                    </Grid>
+                  );
+                })}
             </Grid>
           </MDBox>
         </Card>

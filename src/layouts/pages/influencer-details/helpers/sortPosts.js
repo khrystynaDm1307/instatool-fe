@@ -1,6 +1,6 @@
-export function sortPosts(array, sort) {
+export function sortPosts(array, sort, setLoading) {
   if (!sort) return array;
-
+  setLoading(true);
   const { type, name } = sort;
   const isASC = type === "ASC";
 
@@ -61,6 +61,6 @@ export function sortPosts(array, sort) {
       return isASC ? engA - engB : engB - engA;
     });
   }
-
+  setLoading(false);
   return sortedArr;
 }
