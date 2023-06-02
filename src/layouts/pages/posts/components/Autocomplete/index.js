@@ -131,6 +131,13 @@ export default function FilterComponent({
       const newSelectedOptions = selectedValues.includes(option)
         ? selectedValues.filter((o) => o !== option)
         : [...selectedValues, option];
+
+        setSelectedCountries(() =>
+        selectedCountries.filter((country) =>
+          newSelectedOptions.some((o) => o.country === country)
+        )
+      );
+
       setSelectedValues(() => newSelectedOptions);
     }
   };
@@ -164,7 +171,15 @@ export default function FilterComponent({
         loading={loading}
         multiple={true}
         value={selectedValues}
-        onChange={(event, value) => setSelectedValues(value)}
+        onChange={(event, value) => {
+          setSelectedCountries(() =>
+            selectedCountries.filter((country) =>
+              value.some((o) => o.country === country)
+            )
+          );
+
+          setSelectedValues(value);
+        }}
         renderOption={(props, option) => {
           if (option.type === "country") {
             const citiesInCountry = options.filter(

@@ -77,6 +77,9 @@ function Posts() {
     setFormValues(params);
     handleMutate({ ...params, sort: sortValue });
     handlers?.setSubmitting(false);
+    // handlers.resetForm()
+    // setSelectedCountries([])
+    // setSelectedValues([])
   };
 
   const handleMutate = (params) =>
