@@ -32,7 +32,7 @@ import MDAvatar from "components/MDAvatar";
 
 function PostPrevCard({ image, action, authors, mentions, hashtags, metrics }) {
   const mentionsSet = new Set(
-    mentions?.map((mention) => mention.username) || []
+    mentions?.map((mention) => mention.id || mention.username) || []
   );
   const mentionsArray = Array.from(mentionsSet);
 
@@ -120,7 +120,7 @@ function PostPrevCard({ image, action, authors, mentions, hashtags, metrics }) {
                 overflow: "hidden",
               }}
             >
-              {hashtags.map((hashtag) => `#${hashtag.name}`).join(", ")}
+              {hashtags.map((hashtag) => `#${hashtag.id}`).join(", ")}
             </MDTypography>
           )}
           {mentionsArray?.length > 0 && (

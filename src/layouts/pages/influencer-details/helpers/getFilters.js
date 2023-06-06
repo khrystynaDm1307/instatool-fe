@@ -16,11 +16,11 @@ export function getFilters(posts) {
     } = post;
     allMentions = [
       ...allMentions,
-      ...mentions.map((m) => m.username),
+      ...mentions.map((m) => m.id),
       ...tagged_accounts.map((m) => m.username),
     ];
 
-    allhashtags = [...allhashtags, ...hashtags.map((m) => m.name)];
+    allhashtags = [...allhashtags, ...hashtags.map((m) => m.id)];
 
     if (locationName) {
       allLocations.push(locationName);

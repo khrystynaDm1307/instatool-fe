@@ -42,7 +42,7 @@ export const filterPosts = (array, filters) => {
   if (mentions.length) {
     array = array.filter((post) => {
       return (
-        post.mentions.some((mention) => mentions.includes(mention.username)) ||
+        post.mentions.some((mention) => mentions.includes(mention.id)) ||
         post.tagged_accounts.some((mention) =>
           mentions.includes(mention.username)
         )
@@ -52,7 +52,7 @@ export const filterPosts = (array, filters) => {
 
   if (hashtags.length) {
     array = array.filter((post) => {
-      return post.hashtags.some((hashtag) => hashtags.includes(hashtag.name));
+      return post.hashtags.some((hashtag) => hashtags.includes(hashtag.id));
     });
   }
 

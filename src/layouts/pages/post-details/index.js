@@ -92,7 +92,7 @@ function SinglePost() {
     </MDBox>
   ));
 
-  const mentions_arr = mentions?.map((hashtag) => `@${hashtag.username}`) || [];
+  const mentions_arr = mentions?.map((hashtag) => `@${hashtag.id}`) || [];
 
   const tagged_accounts_arr =
     tagged_accounts?.map((hashtag) => `@${hashtag.username}`) || [];
@@ -254,7 +254,7 @@ function SinglePost() {
                   #Hashtags
                 </MDTypography>
                 <MDTypography variant="h6" mt={1} fontSize="0.875rem">
-                  {hashtags?.map((hashtag) => hashtag.name)?.join(", ") || "-"}
+                  {hashtags?.map((hashtag) => hashtag.id)?.join(", ") || "-"}
                 </MDTypography>
 
                 <MDTypography variant="h6" mt={6}>

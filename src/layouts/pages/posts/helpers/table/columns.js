@@ -126,7 +126,7 @@ const columns = [
     sortable: false,
     valueGetter: (params) => {
       const set = [
-        ...params.row.mentions.map((m) => m.username),
+        ...params.row.mentions.map((m) => m.id),
         ...params.row.tagged_accounts.map((m) => m.username),
       ];
 
@@ -152,7 +152,7 @@ const columns = [
             overflow: "hidden",
           }}
         >
-          {params.row.hashtags?.map((hash) => `#${hash.name} `)?.join("")}
+          {params.row.hashtags?.map((hash) => `#${hash.id} `)?.join("")}
         </MDTypography>
       </Link>
     ),
