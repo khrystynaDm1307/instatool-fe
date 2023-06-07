@@ -17,7 +17,7 @@ const getRows = (post) => {
     shortCode,
     displayUrl,
     videoUrl,
-    tagged_accounts
+    tagged_accounts,
   } = post;
 
   const { email, followersCount } = owner;
@@ -30,9 +30,9 @@ const getRows = (post) => {
     tagged_accounts,
     videoUrl,
     shortCode,
-    engagement_rate: (
-      (engagement > 0 ? engagement : 0) / (followersCount || 1)
-    ).toFixed(2),
+    engagement_rate: followersCount
+      ? (engagement / followersCount).toFixed(2)
+      : "-",
     // post_pic:<img src={`https://storage.googleapis.com/instagram-global-data-images/media/${id}.jpg`} width={300}/>,
     caption,
     followersCount,
@@ -48,6 +48,7 @@ const getRows = (post) => {
     videoViewCount,
     email,
     id,
+    displayUrl: displayUrl || videoUrl,
   };
 };
 
