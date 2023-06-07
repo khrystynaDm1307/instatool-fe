@@ -1,7 +1,8 @@
 const getRows = (owner) => {
   const {
-    overall_engagement,
+    engagement,
     followersCount,
+    profilePicUrl,
     email,
     biography,
     ownerUsername,
@@ -13,11 +14,11 @@ const getRows = (owner) => {
   } = owner;
 
   return {
-    overall_engagement: overall_engagement,
+    overall_engagement: followersCount ? engagement / followersCount : null,
     followersCount,
     email,
     biography,
-    user: { ownerUsername, ownerFullName, verified, url },
+    user: { ownerUsername, ownerFullName, verified, url, profilePicUrl },
     id: ownerUsername,
     url,
     lastPost: posts.sort(

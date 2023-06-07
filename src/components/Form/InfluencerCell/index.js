@@ -24,13 +24,14 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import Avatar from "@mui/material/Avatar";
 import { Link } from "react-router-dom";
 
-function InfluencerCell({ fullName, username, verified, url }) {
+function InfluencerCell({ fullName, username, verified, url, image }) {
   return (
     <Link to={`/influencers/${username}`}>
       <MDBox display="flex" alignItems="center" px={2}>
         <MDBox mr={2}>
           <Avatar
-            src={`https://storage.googleapis.com/instagram-global-data-images/owners/${username}.jpg`}
+            // src={`https://storage.googleapis.com/instagram-global-data-images/owners/${username}.jpg`}
+            src={image}
             alt={fullName}
           />
         </MDBox>

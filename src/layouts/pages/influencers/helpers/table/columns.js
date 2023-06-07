@@ -14,6 +14,7 @@ const columns = [
           username={params.row.user.ownerUsername}
           verified={params.row.user.verified}
           url={params.row.user.url}
+          image={params.row.profilePicUrl}
         />
       );
     },
@@ -36,7 +37,7 @@ const columns = [
     headerAlign: "center",
     sortable: false,
     valueGetter: (params) => {
-      return ((params.value / 1000) * 100).toFixed(2) + " %";
+      return ((params.value))?.toFixed(2) + " %";
     },
   },
 
