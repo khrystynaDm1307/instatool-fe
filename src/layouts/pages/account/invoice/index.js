@@ -29,7 +29,7 @@ import MDButton from "components/MDButton";
 import BaseLayout from "layouts/pages/account/components/BaseLayout";
 
 // Images
-import logoCT from "assets/images/logo-ct.png";
+import logoCT from "assets/images/logo-ct-2.svg";
 import logoCTDark from "assets/images/logo-ct-dark.png";
 
 // Material Dashboard 2 PRO React context
